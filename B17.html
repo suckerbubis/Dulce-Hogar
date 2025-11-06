@@ -1,1 +1,69 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dulce Hogar — B-17 Confirmación automática</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0f16;     /* pizarra */
+    --grid:#1a2436;   /* grilla */
+    --ink:#f4f6fb;    /* tiza */
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    background:
+      linear-gradient(var(--grid) 1px, transparent 1px) 0 0/32px 32px,
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/32px 32px,
+      var(--bg);
+    color:var(--ink);
+    min-height:100vh; display:flex; justify-content:center; align-items:flex-start; padding:28px;
+  }
+  .stage{position:relative; width:1120px; min-height:560px;}
+  .title{
+    position:absolute; left:16px; top:0; right:16px;
+    font-size:28px; font-weight:800; line-height:1.3;
+  }
 
+  .panel{
+    position:absolute; top:120px; border:2px solid var(--ink); border-radius:12px;
+    background:transparent; color:var(--ink); padding:16px 18px;
+  }
+  .email{left:40px; width:600px; height:300px}
+  .sms{right:40px; width:300px; height:300px}
+
+  .hdr{
+    border-bottom:2px solid var(--ink); padding-bottom:8px; margin-bottom:12px;
+    font-weight:900; font-size:20px;
+  }
+  .row{margin:10px 0; font-weight:800}
+  .bullets{margin:8px 0 0 0; padding-left:18px; font-weight:800}
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="title">Tras un pago aprobado, se envía automáticamente la confirmación</div>
+
+    <!-- “Email” de confirmación -->
+    <section class="panel email">
+      <div class="hdr">Confirmación de pedido — Dulce Hogar</div>
+      <div class="row"><b>N° 2854</b></div>
+      <ul class="bullets">
+        <li>Pan, 6 facturas</li>
+        <li>Monto: $ 18.000</li>
+      </ul>
+      <div class="row" style="margin-top:24px">Hora estimada</div>
+    </section>
+
+    <!-- “SMS” corto -->
+    <section class="panel sms">
+      <div class="row"><b>N° 2854</b></div>
+      <div class="row">Confirmado.</div>
+      <div class="row">Est. hora:</div>
+      <div class="row" style="font-size:22px; font-weight:900">15:30</div>
+    </section>
+  </div>
+</body>
+</html>
