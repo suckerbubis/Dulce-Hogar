@@ -1,1 +1,140 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dulce Hogar — B-05 Filtros dinámicos</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0f16;
+    --grid:#1a2436;
+    --ink:#f4f6fb;
+    --muted:#c7d0e1;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    background:
+      linear-gradient(var(--grid) 1px, transparent 1px) 0 0/32px 32px,
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/32px 32px,
+      var(--bg);
+    color:var(--ink);
+    min-height:100vh;
+    display:flex; align-items:flex-start; justify-content:center;
+    padding:24px;
+  }
+  .stage{width:980px; min-height:720px; position:relative}
+  .title{position:absolute; left:8px; top:-6px; font-size:22px; font-weight:700}
 
+  /* Panel filtros */
+  .panel{
+    margin-top:36px;
+    border:2px solid var(--ink); border-radius:10px; padding:14px 16px;
+  }
+  .panel h3{
+    margin:0 0 10px; font-size:20px; font-weight:700;
+  }
+  .form-row{
+    display:grid; grid-template-columns: 130px 1fr 130px 1fr; gap:14px; align-items:center;
+  }
+  .label{font-weight:700}
+  .select, .input{
+    height:38px; background:transparent; color:var(--ink);
+    border:2px solid var(--ink); border-radius:8px; padding:0 12px; outline:none;
+    appearance:none;
+  }
+  .select-wrap{position:relative}
+  .select-wrap:after{
+    content:"▾"; position:absolute; right:12px; top:8px; font-size:18px; pointer-events:none;
+  }
+  .actions{margin-top:14px; display:flex; gap:12px}
+  .btn{
+    display:inline-block; padding:9px 14px; border:2px solid var(--ink); border-radius:8px;
+    font-weight:700; cursor:default;
+  }
+
+  /* Filtros activos */
+  .active{
+    margin-top:14px; font-weight:700;
+  }
+  .tag{
+    display:inline-block; margin-left:8px; padding:2px 8px; border:2px solid var(--ink);
+    border-radius:999px; font-weight:700;
+  }
+
+  /* Grid de productos (4 x 4) */
+  .grid{
+    margin-top:16px;
+    display:grid; grid-template-columns: repeat(4, 1fr); gap:16px;
+  }
+  .card{
+    border:2px solid var(--ink); border-radius:10px; padding:10px; height:120px;
+    display:flex; align-items:center; justify-content:center; font-weight:700;
+  }
+
+  /* Contenedor principal */
+  .board{margin-top:40px}
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="title">B-05 — Filtros</div>
+
+    <div class="board">
+      <!-- Panel superior de filtros -->
+      <section class="panel">
+        <h3>Filtros</h3>
+        <div class="form-row">
+          <div class="label">Categoría:</div>
+          <div class="select-wrap">
+            <select class="select">
+              <option>Pasteles</option>
+              <option>Pan</option>
+              <option>Facturas</option>
+            </select>
+          </div>
+
+          <div class="label">Buscar:</div>
+          <input class="input" type="text" value="integral" />
+        </div>
+
+        <div class="actions">
+          <div class="btn">Aplicar filtros</div>
+          <div class="btn">Limpiar</div>
+        </div>
+      </section>
+
+      <!-- Filtros activos -->
+      <div class="active">
+        Filtros activos:
+        <span class="tag">Pasteles</span>
+        <span class="tag">“integral”</span>
+      </div>
+
+      <!-- Grilla de productos -->
+      <section class="grid">
+        <div class="card">Producto</div>
+        <div class="card">Producto</div>
+        <div class="card">Producto</div>
+        <div class="card">Producto</div>
+
+        <div class="card">Producto</div>
+        <div class="card">Producto</div>
+        <div class="card">Producto</div>
+        <div class="card">Producto</div>
+
+        <div class="card">Producto</div>
+        <div class="card">Producto</div>
+        <div class="card">Producto</div>
+        <div class="card">Producto</div>
+
+        <div class="card">Producto</div>
+        <div class="card">Producto</div>
+        <div class="card">Producto</div>
+        <div class="card">Producto</div>
+      </section>
+    </div>
+  </div>
+</body>
+</html>
