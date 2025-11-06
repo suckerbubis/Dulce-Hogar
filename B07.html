@@ -1,1 +1,103 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dulce Hogar — B-07 Carrito y confirmación</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0f16;
+    --grid:#1a2436;
+    --ink:#f4f6fb;
+    --muted:#c7d0e1;
+    --red:#ef4444;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    background:
+      linear-gradient(var(--grid) 1px, transparent 1px) 0 0/32px 32px,
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/32px 32px,
+      var(--bg);
+    color:var(--ink);
+    min-height:100vh;
+    display:flex; justify-content:center; align-items:flex-start; padding:28px;
+  }
+  .stage{position:relative; width:980px; height:560px;}
+  .title{position:absolute; left:8px; top:-6px; font-size:22px; font-weight:700}
+
+  .box{
+    position:absolute; border:2px solid var(--ink); border-radius:10px; padding:12px 14px;
+    background:transparent; color:var(--ink);
+  }
+  .h{font-weight:700; margin-bottom:8px}
+
+  /* Carrito (izquierda) */
+  #cart{
+    left:40px; top:70px; width:300px; height:300px;
+    display:flex; flex-direction:column; gap:8px;
+  }
+  .list{flex:1; border:2px solid var(--ink); border-radius:8px; padding:8px}
+  .row{display:flex; justify-content:space-between; padding:2px 0; font-weight:600}
+  .confirm{
+    margin-top:10px; align-self:flex-start;
+    border:2px solid var(--ink); border-radius:999px; padding:8px 14px; font-weight:700;
+  }
+
+  /* Modales */
+  #modal1{left:430px; top:90px; width:260px; text-align:center}
+  #modal2{left:460px; top:300px; width:220px; text-align:center}
+  .ok{display:inline-block; margin-top:10px; padding:6px 12px; border:2px solid var(--ink); border-radius:6px; font-weight:700}
+
+  /* Flechas rojas (SVG) */
+  svg.lines{position:absolute; inset:0; pointer-events:none}
+  .arrow{stroke:var(--red); stroke-width:3; fill:none; marker-end:url(#ah)}
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="title">B-07</div>
+
+    <!-- Carrito -->
+    <div class="box" id="cart">
+      <div class="h">Carrito</div>
+      <div class="list">
+        <div class="row"><span>Pan integral</span><span>1</span></div>
+        <div class="row"><span>Facturas</span><span>6</span></div>
+        <div class="row"><span>Pasteles</span><span>6</span></div>
+      </div>
+      <div class="confirm">Confirmar pedido</div>
+    </div>
+
+    <!-- Modal: Pedido pendiente -->
+    <div class="box" id="modal1">
+      <div class="h">Carrito</div>
+      <div>Pedido #0001</div>
+      <div>Pendiente</div>
+      <div class="ok">OK</div>
+    </div>
+
+    <!-- Modal: Pedido confirmado -->
+    <div class="box" id="modal2">
+      <div class="h">Carrito</div>
+      <div>Pedido confirmado</div>
+      <div class="ok">OK</div>
+    </div>
+
+    <!-- Conexiones -->
+    <svg class="lines" viewBox="0 0 980 560" preserveAspectRatio="none">
+      <defs>
+        <marker id="ah" markerWidth="12" markerHeight="8" refX="10" refY="4" orient="auto">
+          <polygon points="0,0 12,4 0,8" fill="#ef4444"/>
+        </marker>
+      </defs>
+      <!-- Carrito -> Modal pendiente -->
+      <path class="arrow" d="M 340 200 C 380 200, 380 150, 430 150"/>
+      <!-- Modal pendiente -> Modal confirmado -->
+      <path class="arrow" d="M 560 200 C 560 240, 560 260, 560 300"/>
+    </svg>
+  </div>
+</body>
+</html>
 
