@@ -1,1 +1,107 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dulce Hogar — B-16 Programa de puntos</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0f16;     /* pizarra */
+    --grid:#1a2436;   /* grilla */
+    --ink:#f4f6fb;    /* tiza */
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    background:
+      linear-gradient(var(--grid) 1px, transparent 1px) 0 0/32px 32px,
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/32px 32px,
+      var(--bg);
+    color:var(--ink);
+    min-height:100vh; display:flex; justify-content:center; align-items:flex-start; padding:28px;
+  }
+  .stage{position:relative; width:1120px; min-height:720px;}
+  .title{position:absolute; left:8px; top:-6px; font-size:22px; font-weight:700}
 
+  /* Panel genérico */
+  .panel{border:2px solid var(--ink); border-radius:12px; padding:16px 18px; background:transparent;}
+  .hdr{font-weight:900; border-bottom:2px solid var(--ink); padding-bottom:8px; margin-bottom:12px;}
+  .pill{border:2px solid var(--ink); border-radius:999px; padding:8px 12px; font-weight:900; display:inline-block}
+
+  /* Layout */
+  .grid{display:grid; grid-template-columns: 1fr 380px; gap:18px; margin-top:42px;}
+
+  /* Columna izquierda (programa + checkout) */
+  .rules{display:grid; grid-template-columns: 1fr 80px; gap:12px; align-items:start}
+  .rules ul{margin:0; padding-left:18px; font-weight:700}
+  .balance{justify-self:end; align-self:start; font-size:28px; font-weight:900}
+
+  .checkout{margin-top:18px}
+  .tot{display:grid; grid-template-columns: 1fr 160px; gap:12px; align-items:center; margin:8px 0; font-weight:900}
+  .row{border-top:2px solid var(--ink); padding:10px 0}
+  .chk{display:flex; align-items:center; gap:10px; font-weight:900}
+  input[type="checkbox"]{width:20px; height:20px; accent-color:#ffffff}
+  .cta{margin-top:14px; display:inline-block; border:2px solid var(--ink); border-radius:12px; padding:12px 18px; font-weight:900}
+
+  /* Columna derecha (escenarios) */
+  .gherkin{white-space:pre-line; font-weight:700; line-height:1.45}
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="title">B-16</div>
+
+    <div class="grid">
+      <!-- Izquierda -->
+      <div>
+        <section class="panel">
+          <div class="hdr">Programa de puntos</div>
+
+          <div class="rules">
+            <ul>
+              <li>1 punto cada $1.000</li>
+              <li>Expiran en 12 meses</li>
+              <li>Canje disponible desde 10 puntos</li>
+            </ul>
+            <div class="balance">25</div>
+          </div>
+        </section>
+
+        <section class="panel checkout">
+          <div class="hdr">Checkout</div>
+
+          <div class="tot">
+            <div>Total</div>
+            <div style="text-align:right">$ 15.000</div>
+          </div>
+
+          <div class="row">
+            <label class="chk">
+              <input type="checkbox" /> Aplicar puntos
+            </label>
+          </div>
+
+          <div class="cta">Realizar Pedido</div>
+        </section>
+      </div>
+
+      <!-- Derecha -->
+      <section class="panel">
+        <div class="hdr">Escenario (Gherkin)</div>
+        <div class="gherkin">
+Escenario: Acumular puntos
+  Dado que realizo una compra de $5000
+  Cuando el pago es confirmado
+  Entonces el sistema acredita 5 puntos en mi cuenta
+
+Escenario: Canjear puntos
+  Dado que tengo 20 puntos acumulados
+  Cuando los aplico en un pedido
+  Entonces obtengo un descuento de $2000
+        </div>
+      </section>
+    </div>
+  </div>
+</body>
+</html>
