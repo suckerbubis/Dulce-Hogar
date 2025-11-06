@@ -1,1 +1,149 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dulce Hogar — B-15 Promociones (mockup pizarra)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0f16;     /* pizarra */
+    --grid:#1a2436;   /* grilla */
+    --ink:#f4f6fb;    /* tiza */
+    --accent:#ef4444; /* rojo */
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    background:
+      linear-gradient(var(--grid) 1px, transparent 1px) 0 0/32px 32px,
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/32px 32px,
+      var(--bg);
+    color:var(--ink);
+    min-height:100vh; display:flex; justify-content:center; align-items:flex-start; padding:28px;
+  }
+  .stage{position:relative; width:1120px; min-height:720px;}
+  .title{position:absolute; left:8px; top:-6px; font-size:22px; font-weight:700}
 
+  .col{position:absolute; top:50px}
+  .left{left:24px; width:520px}
+  .right{right:24px; width:540px}
+
+  .panel{
+    border:2px solid var(--ink); border-radius:12px; padding:16px 18px; margin-bottom:18px; background:transparent;
+  }
+  .hdr{
+    font-weight:900; border-bottom:2px solid var(--ink); padding-bottom:8px; margin-bottom:12px;
+  }
+
+  .form-grid{
+    display:grid; grid-template-columns: 160px 1fr; gap:12px 14px; align-items:center;
+  }
+  .lbl{font-weight:800}
+  .input, .select{
+    height:40px; background:transparent; border:2px solid var(--ink); border-radius:10px;
+    color:var(--ink); padding:0 12px; font-weight:800; appearance:none;
+  }
+  .row{display:flex; gap:12px; margin-top:12px}
+  .btn{border:2px solid var(--ink); border-radius:10px; padding:10px 14px; font-weight:900}
+
+  /* Timeline */
+  .timeline{position:relative; height:92px; margin-top:14px}
+  .bar{position:absolute; left:8%; right:8%; top:44px; height:2px; background:var(--ink)}
+  .dot{position:absolute; top:37px; width:14px; height:14px; border:2px solid var(--ink); border-radius:50%; background:transparent}
+  .dot.start{left:8%}
+  .dot.now{left:50%; border-color:var(--accent)}
+  .dot.end{right:8%}
+  .lab{position:absolute; top:14px; transform:translateX(-50%); font-weight:800}
+  .lab.start{left:8%}
+  .lab.now{left:50%; color:var(--accent)}
+  .lab.end{right:8%; transform:none}
+
+  /* Mensajes de estado */
+  .state{margin-top:12px; text-align:center; font-weight:900; border:2px solid var(--ink); border-radius:10px; padding:10px 14px}
+
+  /* Catálogo con promo */
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+  .card{border:2px solid var(--ink); border-radius:12px; padding:12px; height:150px; position:relative}
+  .badge{position:absolute; left:12px; top:12px; border:2px solid var(--ink); border-radius:999px; padding:4px 10px; font-weight:900}
+  .prod{position:absolute; left:12px; bottom:16px; font-weight:800}
+  .price{position:absolute; right:12px; bottom:16px; font-weight:900}
+  .price strike{opacity:.85}
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="title">B-15 — Promociones</div>
+
+    <!-- Columna izquierda: configuración -->
+    <div class="col left">
+      <section class="panel">
+        <div class="hdr">Configurar promoción</div>
+        <div class="form-grid">
+          <div class="lbl">Nombre</div>
+          <input class="input" value="Día de la Madre">
+          <div class="lbl">Tipo</div>
+          <select class="select">
+            <option>Porcentaje (%)</option>
+            <option>Precio combo</option>
+          </select>
+          <div class="lbl">Descuento</div>
+          <input class="input" value="20%">
+          <div class="lbl">Inicio</div>
+          <input class="input" value="08/05">
+          <div class="lbl">Término</div>
+          <input class="input" value="10/05">
+          <div class="lbl">Destacar en catálogo</div>
+          <select class="select"><option>Sí</option><option>No</option></select>
+        </div>
+        <div class="row">
+          <div class="btn">Guardar</div>
+          <div class="btn">Programar</div>
+          <div class="btn">Desactivar</div>
+        </div>
+
+        <!-- Línea de tiempo -->
+        <div class="timeline">
+          <div class="bar"></div>
+          <div class="dot start"></div>
+          <div class="dot now"></div>
+          <div class="dot end"></div>
+          <div class="lab start">08/05</div>
+          <div class="lab now">hoy</div>
+          <div class="lab end">10/05</div>
+        </div>
+
+        <!-- Estado de ejemplo -->
+        <div class="state">Promoción publicada automáticamente</div>
+      </section>
+    </div>
+
+    <!-- Columna derecha: catálogo con promo -->
+    <div class="col right">
+      <section class="panel">
+        <div class="hdr">Catálogo (vista previa con promoción activa)</div>
+        <div class="grid">
+          <div class="card">
+            <div class="badge">PROMO -20%</div>
+            <div class="prod">Torta de frutillas</div>
+            <div class="price"><strike>$12.000</strike> $9.600</div>
+          </div>
+          <div class="card">
+            <div class="badge">COMBO</div>
+            <div class="prod">Combo: 1 Pan + 6 Facturas</div>
+            <div class="price"><strike>$3.200</strike> $2.700</div>
+          </div>
+          <div class="card">
+            <div class="prod">Pan Integral</div>
+            <div class="price">$1.200</div>
+          </div>
+          <div class="card">
+            <div class="prod">Facturas x6</div>
+            <div class="price">$2.000</div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</body>
+</html>
