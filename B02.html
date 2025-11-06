@@ -3,148 +3,99 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Dulce hogar — Login (flujo con errores)</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<title>Dulce Hogar — Login (interactivo)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#07090c;
-    --ink:#e9edf5;
-    --muted:#a9b2c6;
-    --panel:#0f1218;
-    --line:#353c4a;
-    --accent:#d44236; /* flechas */
-    --btn:#b64f26;
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-    background-color:var(--bg);
-    color:var(--ink);
-    min-height:100vh; display:flex; justify-content:center; align-items:flex-start; padding:18px;
-  }
-  .stage{position:relative; width:1150px; height:720px;}
-
-  /* Barra superior (navegador) */
-  .chrome{
-    position:absolute; left:0; right:0; top:0; height:68px;
-    display:flex; align-items:center; gap:12px;
-  }
-  .dots{margin-left:auto; display:flex; gap:10px}
-  .dot{width:14px; height:14px; border-radius:50%; border:2px solid #3a3f4a}
-  .url{
-    flex:1; height:44px; border-radius:10px; border:2px solid #404959;
-    background:#121720; color:#cfd6e6; padding:0 14px; display:flex; align-items:center; gap:10px;
-    box-shadow: inset 0 0 0 1px #1b2230;
-  }
-  .padlock{width:14px; height:14px; border:2px solid #6aa79f; border-radius:3px}
-  .brand{position:absolute; left:18px; top:18px; font-weight:800; opacity:.9}
-
-  /* Panel de login */
-  .login{
-    position:absolute; left:10px; top:96px; width:360px;
-    background:var(--panel); border:2px solid #3c4454; border-radius:12px; padding:18px;
-    box-shadow:0 0 0 1px #1b2230;
-  }
-  .login h3{margin:0 0 14px; font-weight:700; color:var(--muted)}
-  label{display:block; font-weight:600; margin:10px 0 6px; color:var(--muted)}
-  input{
-    width:100%; height:44px; border-radius:10px; border:2px solid #394355;
-    background:#111722; color:var(--ink); padding:0 12px; font-weight:700;
-  }
-  .btn{
-    margin-top:16px; height:48px; border:none; border-radius:8px;
-    background:var(--btn); color:#fff; font-weight:900; letter-spacing:.5px;
-    width:150px; cursor:default;
-    box-shadow:0 0 0 2px #7a361d inset;
-  }
-
-  /* Modal genérico */
-  .modal{
-    position:absolute; top:160px; left:520px; width:360px;
-    background:#121824; border:3px solid #e6e6e6; border-radius:10px; padding:22px 18px;
-    text-align:center; box-shadow:0 0 0 1px #1b2230;
-  }
-  .modal .title{font-size:28px; font-weight:700; margin-bottom:14px}
-  .ok{
-    display:inline-block; margin-top:6px; padding:10px 36px;
-    border:2px solid #3a4250; border-radius:10px; font-weight:800; color:#dfe6f6;
-    background:#0f141e;
-  }
-
-  /* Segundo modal (token) */
-  .modal.token{top:420px; left:880px; width:320px}
-
-  /* Caja API */
-  .api{
-    position:absolute; left:120px; top:540px; width:320px;
-    background:#0f141d; border:2px solid #394355; border-radius:8px; color:#cfd6e6;
-  }
-  .api .head{padding:8px 12px; border-bottom:2px solid #394355; font-weight:800; letter-spacing:.5px}
-  .api .row{padding:8px 12px; border-top:1px dashed #2f3644; font-weight:700}
-
-  /* flechas (SVG) */
-  svg{position:absolute; inset:0; pointer-events:none}
-  .arrow{stroke:var(--accent); stroke-width:4; fill:none; marker-end:url(#ah)}
+:root{--bg:#0b0f16;--grid:#1a2436;--ink:#e9eefc;--accent:#c85b2f}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  background:linear-gradient(#1a2436 1px,transparent 1px)0 0/34px 34px,
+             linear-gradient(90deg,#1a2436 1px,transparent 1px)0 0/34px 34px,
+             var(--bg);color:var(--ink);min-height:100vh;padding:28px}
+.stage{position:relative;width:1120px;margin:0 auto;min-height:640px}
+.address{border:2px solid var(--ink);border-radius:10px;height:56px;display:flex;align-items:center;gap:10px;padding:0 16px;margin-bottom:22px}
+.tab{font-weight:800;font-size:22px}.bubble{width:18px;height:18px;border:2px solid var(--ink);border-radius:50%}
+.url{flex:1;border:2px solid var(--ink);border-radius:8px;height:36px;display:flex;align-items:center;padding:0 10px}
+.panel{position:absolute;left:60px;top:140px;width:360px;border:2px solid var(--ink);border-radius:10px;padding:14px}
+.h{font-weight:800;margin-bottom:12px}label{display:block;font-weight:700;margin:10px 0 6px}
+input{width:100%;height:44px;border:2px solid var(--ink);border-radius:8px;background:transparent;color:var(--ink);padding:0 10px;font-weight:700}
+button{width:100%;margin-top:14px;padding:10px;border:2px solid var(--accent);color:var(--accent);background:transparent;border-radius:8px;font-weight:900;cursor:pointer}
+.modal{position:absolute;left:520px;top:160px;width:360px;border:2px solid var(--ink);border-radius:10px;padding:14px;display:none;background:rgba(0,0,0,.25)}
+.modal.right{left:auto;right:80px;top:420px}
+.ok{display:inline-block;margin-top:12px;border:2px solid var(--ink);border-radius:8px;padding:8px 18px;font-weight:800;cursor:pointer}
+.note{opacity:.8;font-size:12px;margin-top:6px}
 </style>
 </head>
 <body>
-  <div class="stage">
-
-    <!-- Barra -->
-    <div class="brand">Dulce hogar</div>
-    <div class="chrome">
-      <div style="width:90px"></div>
-      <div class="url">
-        <div class="padlock"></div>
-        https://www.dulcehogar.io
-      </div>
-      <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-    </div>
-
-    <!-- Login -->
-    <section class="login">
-      <h3>Sign in</h3>
-      <label>User Name:</label>
-      <input value="ana@example.com" />
-      <label>Password:</label>
-      <input type="password" value="••••••" />
-      <button class="btn">SIGN IN</button>
-    </section>
-
-    <!-- Modal: credenciales incorrectas -->
-    <div class="modal">
-      <div class="title">Credenciales<br>incorrectas</div>
-      <div class="ok">OK</div>
-    </div>
-
-    <!-- Modal: token caducado -->
-    <div class="modal token">
-      <div class="title">Token caducado</div>
-      <div class="ok">OK</div>
-    </div>
-
-    <!-- Caja API -->
-    <div class="api">
-      <div class="head">APIUSUARIO</div>
-      <div class="row">+ email : string</div>
-      <div class="row">+ pass : string</div>
-    </div>
-
-    <!-- Conexiones -->
-    <svg viewBox="0 0 1150 720" preserveAspectRatio="none">
-      <defs>
-        <marker id="ah" markerWidth="14" markerHeight="10" refX="10" refY="5" orient="auto">
-          <polygon points="0,0 14,5 0,10" fill="#d44236"/>
-        </marker>
-      </defs>
-      <!-- login -> credenciales incorrectas -->
-      <path class="arrow" d="M 370 220 C 420 220, 460 220, 520 240"/>
-      <!-- modal error -> token caducado -->
-      <path class="arrow" d="M 700 360 C 790 410, 840 430, 880 470"/>
-      <!-- login -> API -->
-      <path class="arrow" d="M 150 580 C 120 520, 90 500, 90 480"/>
-    </svg>
-
+<div class="stage">
+  <div class="address">
+    <div class="tab">Dulce Hogar</div>
+    <div class="url"><small>https://www.dulcehogar.io</small></div>
+    <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
   </div>
+
+  <section class="panel">
+    <div class="h">Inicio de sesión</div>
+    <label for="lgEmail">Correo:</label>
+    <input id="lgEmail" type="text" placeholder="usuario@correo.com">
+    <label for="lgPass">Contraseña:</label>
+    <input id="lgPass" type="password" placeholder="********">
+    <button id="btnLogin">SIGN IN</button>
+    <div id="lockNote" class="note" hidden></div>
+  </section>
+
+  <section id="mWrong" class="modal">
+    <div style="font-size:22px;margin-bottom:10px">Credenciales incorrectas</div>
+    <div class="ok" data-close="#mWrong">OK</div>
+  </section>
+
+  <section id="mBlocked" class="modal right">
+    <div style="font-size:22px;margin-bottom:10px">Cuenta temporalmente bloqueada</div>
+    <div class="ok" data-close="#mBlocked">OK</div>
+  </section>
+</div>
+
+<script>
+let tries = 0;
+let lockedUntil = 0;
+// Para demo rápida: 30 s de bloqueo. Cambia a 900000 para 15 minutos reales.
+const BLOCK_MS = 30000;
+
+const $ = s => document.querySelector(s);
+$('#btnLogin').addEventListener('click', () => {
+  const now = Date.now();
+  if (now < lockedUntil) {
+    show('#mBlocked'); showLockNote();
+    return;
+  }
+  const email = ($('#lgEmail').value||'').toLowerCase();
+  const pass  = $('#lgPass').value||'';
+  const ok = email === 'ana@example.com' && pass === 'Clave2025'; // credenciales válidas de ejemplo
+
+  if (ok) {
+    alert('Login exitoso (demo)'); tries = 0; lockedUntil = 0; $('#lockNote').hidden = true;
+    return;
+  }
+  tries++;
+  if (tries >= 5) {
+    lockedUntil = now + BLOCK_MS;
+    tries = 0;
+    show('#mBlocked'); showLockNote();
+  } else {
+    show('#mWrong');
+  }
+});
+document.addEventListener('click', (e)=>{
+  const sel = e.target.getAttribute('data-close'); if(!sel) return;
+  const el = $(sel); if(el) el.style.display='none';
+});
+function show(sel){ const el=$(sel); if(el) el.style.display='block'; }
+function showLockNote(){
+  const left = Math.ceil((lockedUntil - Date.now())/1000);
+  const n = $('#lockNote');
+  n.textContent = `Intentos fallidos: cuenta bloqueada por ${left}s (demo).`;
+  n.hidden = false;
+}
+</script>
 </body>
 </html>
