@@ -1,1 +1,109 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dulce Hogar — B-12 Reporte de ventas</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0f16;
+    --grid:#1a2436;
+    --ink:#f4f6fb;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    background:
+      linear-gradient(var(--grid) 1px, transparent 1px) 0 0/32px 32px,
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/32px 32px,
+      var(--bg);
+    color:var(--ink);
+    min-height:100vh;
+    display:flex; justify-content:center; align-items:flex-start; padding:32px;
+  }
+
+  .stage{position:relative; width:980px; height:720px;}
+  .title{position:absolute; left:8px; top:-6px; font-size:22px; font-weight:700}
+
+  .panel{
+    position:absolute; top:60px; left:60px; width:800px;
+    border:2px solid var(--ink); border-radius:10px;
+    padding:20px 24px; background:transparent;
+  }
+  h3{margin:0 0 12px; font-size:20px; font-weight:700}
+  .filters{margin-bottom:16px;}
+  .option-row{margin-bottom:10px;}
+  label{margin-right:18px; font-weight:600;}
+
+  .inputs{
+    display:flex; align-items:center; gap:12px; margin-top:10px;
+  }
+  input[type="text"]{
+    background:transparent; border:2px solid var(--ink);
+    border-radius:8px; color:var(--ink);
+    padding:6px 10px; width:120px;
+  }
+  .btn{
+    display:inline-block; margin-top:14px;
+    padding:8px 14px; border:2px solid var(--ink);
+    border-radius:8px; font-weight:700;
+  }
+
+  /* Resultados */
+  .results{margin-top:22px;}
+  .results h4{margin:8px 0; font-weight:700;}
+  .metric{margin-left:20px; font-weight:600; margin-bottom:8px;}
+
+  /* Botones de exportación */
+  .exports{
+    margin-top:24px; display:flex; gap:16px;
+  }
+  .exp-btn{
+    border:2px solid var(--ink); border-radius:8px;
+    padding:8px 14px; font-weight:700; cursor:default;
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="title">B-12</div>
+
+    <div class="panel">
+      <h3>Reporte de Ventas</h3>
+
+      <div class="filters">
+        <div class="option-row">
+          <label><input type="radio" name="periodo"> Día</label>
+          <label><input type="radio" name="periodo"> Semana</label>
+          <label><input type="radio" name="periodo"> Mes</label>
+          <label><input type="radio" name="periodo"> Rango personalizado</label>
+        </div>
+
+        <div class="inputs">
+          <label>Inicio:</label>
+          <input type="text" placeholder="Inicio">
+          <label>Final:</label>
+          <input type="text" placeholder="Final">
+        </div>
+
+        <div class="btn">Generar reporte</div>
+      </div>
+
+      <div class="results">
+        <h4>Resultados</h4>
+        <div class="metric">Total de ventas: $0</div>
+        <div class="metric">Cantidad de pedidos: 0</div>
+        <div class="metric">Productos más vendidos: _______</div>
+        <div class="metric">Comparativa con períodos anteriores: _______</div>
+      </div>
+
+      <div class="exports">
+        <div class="exp-btn">Exportar como PDF</div>
+        <div class="exp-btn">Exportar como Excel</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
 
