@@ -1,1 +1,129 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dulce Hogar — B-08 Pasarela de pago</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0f16;
+    --grid:#1a2436;
+    --ink:#f4f6fb;
+    --red:#ef4444;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    background:
+      linear-gradient(var(--grid) 1px, transparent 1px) 0 0/32px 32px,
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/32px 32px,
+      var(--bg);
+    color:var(--ink);
+    min-height:100vh;
+    display:flex; justify-content:center; align-items:flex-start; padding:28px;
+  }
+  .stage{position:relative; width:980px; height:560px;}
+  .title{position:absolute; left:8px; top:-6px; font-size:22px; font-weight:700}
+
+  .box{
+    position:absolute; border:2px solid var(--ink); border-radius:10px;
+    background:transparent; color:var(--ink);
+  }
+
+  /* Panel principal */
+  #panel{
+    left:60px; top:60px; width:700px; padding:14px;
+  }
+  .panel-title{
+    border:2px solid var(--ink); border-radius:8px; padding:6px 10px;
+    font-weight:700; text-align:center; margin-bottom:10px;
+  }
+
+  .section{margin-top:10px; border-top:2px solid var(--ink); padding-top:10px}
+  .row{display:grid; grid-template-columns: 1fr 120px 120px; gap:12px; margin:6px 0}
+  .head{font-weight:700}
+  .methods{margin-top:8px}
+  .btn-pay{
+    position:absolute; right:20px; top:200px;
+    border:2px solid var(--ink); border-radius:8px; padding:10px 12px; font-weight:700;
+  }
+
+  /* Modales */
+  #okModal, #badModal{
+    width:230px; padding:12px; text-align:center;
+  }
+  #okModal{left:180px; bottom:80px}
+  #badModal{right:120px; bottom:80px}
+  .m-title{font-weight:700; margin-bottom:6px}
+  .ok{
+    display:inline-block; margin-top:10px; padding:6px 12px;
+    border:2px solid var(--ink); border-radius:6px; font-weight:700;
+  }
+
+  /* Flechas rojas (SVG) */
+  svg.lines{position:absolute; inset:0; pointer-events:none}
+  .arrow{stroke:var(--red); stroke-width:3; fill:none; marker-end:url(#ah)}
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="title">B-08</div>
+
+    <!-- Panel principal -->
+    <div class="box" id="panel">
+      <div class="panel-title">Dulce Hogar — Pasarela de pago</div>
+
+      <div class="section">
+        <div class="head">Resumen del pedido:</div>
+        <div class="row head">
+          <div>Item</div><div>Precio</div><div>Total</div>
+        </div>
+        <div class="row">
+          <div>Pan integral x1</div><div>$1.200</div><div>$1.200</div>
+        </div>
+        <div class="row">
+          <div>Facturas x6</div><div>$2.000</div><div>$2.000</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="head">Método de pago</div>
+        <div class="methods">
+          • WebPay<br>
+          • Transferencia
+        </div>
+      </div>
+
+      <div class="btn-pay">Pagar ahora</div>
+    </div>
+
+    <!-- Modales de resultado -->
+    <div class="box" id="okModal">
+      <div class="m-title">Pago aprobado</div>
+      <div>Estado: Pagado</div>
+      <div class="ok">OK</div>
+    </div>
+
+    <div class="box" id="badModal">
+      <div class="m-title">Pago rechazado</div>
+      <div>Estado: Pendiente</div>
+      <div class="ok">OK</div>
+    </div>
+
+    <!-- Conexiones (Pagar ahora -> modales) -->
+    <svg class="lines" viewBox="0 0 980 560" preserveAspectRatio="none">
+      <defs>
+        <marker id="ah" markerWidth="12" markerHeight="8" refX="10" refY="4" orient="auto">
+          <polygon points="0,0 12,4 0,8" fill="#ef4444"/>
+        </marker>
+      </defs>
+      <!-- Desde botón pagar hacia modal OK -->
+      <path class="arrow" d="M 540 240 C 520 300, 440 360, 300 420"/>
+      <!-- Desde botón pagar hacia modal Rechazado -->
+      <path class="arrow" d="M 540 240 C 640 300, 720 360, 820 420"/>
+    </svg>
+  </div>
+</body>
+</html>
 
