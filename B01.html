@@ -3,64 +3,70 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>DulceHogar — Inicio de sesión</title>
+<title>DulceHogar — Registro (interactivo)</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-  :root{ --bg:#0b0f16; --grid:#1a2436; --ink:#e9eefc; --accent:#f3b27e; }
-  *{box-sizing:border-box}
-  body{
-    margin:0; font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-    background:
-      linear-gradient(var(--grid) 1px, transparent 1px) 0 0/34px 34px,
-      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/34px 34px,
-      var(--bg);
-    color:var(--ink);
-    min-height:100vh; padding:28px;
-  }
-  .stage{position:relative; width:800px; margin:0 auto; min-height:600px;}
-  .browser{border:2px solid var(--ink); border-radius:10px; height:52px; display:flex; align-items:center; padding:0 14px; gap:14px; margin-bottom:40px}
-  .tab{font-size:22px; font-weight:800}
-  .bubble{margin-left:auto; width:18px; height:18px; border:2px solid var(--ink); border-radius:50%}
-
-  /* Panel de inicio de sesión */
-  .panel{
-    position:absolute; left:50%; top:160px; transform:translateX(-50%);
-    width:380px; border:2px solid var(--ink); border-radius:10px;
-    padding:20px; z-index:2;
-  }
-  .ph{font-weight:800; font-size:20px; margin-bottom:16px}
-  label{display:block; font-weight:700; margin:10px 0 6px}
-  input[type="text"], input[type="password"]{
-    width:100%; height:44px; border:2px solid var(--ink); border-radius:8px;
-    background:transparent; color:var(--ink); padding:0 10px; font-weight:700;
-  }
-  button{
-    width:100%; margin-top:20px; padding:10px 14px;
-    border:2px solid var(--accent); color:var(--accent);
-    background:transparent; border-radius:8px; font-weight:800;
-    cursor:pointer;
-  }
-  button:active{transform:translateY(1px)}
+:root{--bg:#0b0f16;--grid:#1a2436;--ink:#e9eefc;--accent:#f3b27e;--red:#ef4444}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  background:linear-gradient(var(--grid)1px,transparent 1px)0 0/34px 34px,
+             linear-gradient(90deg,var(--grid)1px,transparent 1px)0 0/34px 34px,
+             var(--bg);color:var(--ink);min-height:100vh;padding:28px}
+.stage{position:relative;width:1120px;margin:0 auto;min-height:620px}
+.browser{border:2px solid var(--ink);border-radius:10px;height:52px;display:flex;align-items:center;padding:0 14px;gap:14px;margin-bottom:20px}
+.tab{font-size:22px;font-weight:800}.bubble{margin-left:auto;width:18px;height:18px;border:2px solid var(--ink);border-radius:50%}
+.panel{position:absolute;left:80px;top:120px;width:390px;border:2px solid var(--ink);border-radius:10px;padding:12px;z-index:2}
+.ph{font-weight:800;margin-bottom:10px}label{display:block;font-weight:700;margin:10px 0 6px}
+input[type="text"],input[type="password"]{width:100%;height:44px;border:2px solid var(--ink);border-radius:8px;background:transparent;color:var(--ink);padding:0 10px;font-weight:700}
+button{margin-top:12px;padding:10px 14px;border:2px solid var(--accent);color:var(--accent);background:transparent;border-radius:8px;font-weight:800;cursor:pointer}
+.modal{position:absolute;right:90px;top:150px;width:430px;border:2px solid var(--ink);border-radius:10px;padding:12px;background:rgba(0,0,0,.25);z-index:2;display:none}
+.modal.small{top:390px;width:380px}
+.mh{font-weight:800;margin-bottom:8px}.ok{display:inline-block;margin-top:12px;border:2px solid var(--ink);border-radius:8px;padding:8px 18px;font-weight:800;cursor:pointer}
+svg{position:absolute;inset:0;z-index:1;pointer-events:none}.arrow{stroke:var(--red);stroke-width:3;fill:none;marker-end:url(#ah);stroke-linecap:round}
 </style>
 </head>
 <body>
-  <div class="stage">
-    <div class="browser">
-      <div class="tab">DulceHogar</div>
-      <div class="bubble"></div><div class="bubble"></div>
-    </div>
+<div class="stage">
+  <div class="browser"><div class="tab">DulceHogar</div><div class="bubble"></div><div class="bubble"></div></div>
 
-    <section class="panel">
-      <div class="ph">Inicio de sesión</div>
+  <section class="panel">
+    <div class="ph">Registro de Usuario</div>
+    <label for="regEmail">Nombre de Usuario (email):</label>
+    <input id="regEmail" type="text" placeholder="ana@example.com" autocomplete="off">
+    <label for="regPass">Contraseña:</label>
+    <input id="regPass" type="password" placeholder="********">
+    <button id="btnReg">Registrarse</button>
+  </section>
 
-      <label for="email">Correo electrónico:</label>
-      <input id="email" type="text" placeholder="ana@example.com" autocomplete="off" />
+  <section id="mEmail" class="modal"><div class="mh">Registro</div><div style="font-size:22px">El email ya está en uso.</div><div class="ok" data-close="#mEmail">OK</div></section>
+  <section id="mPass"  class="modal small"><div class="mh">Registro</div><div style="font-size:22px">La contraseña no cumple los requisitos.</div><div class="ok" data-close="#mPass">OK</div></section>
 
-      <label for="pass">Contraseña:</label>
-      <input id="pass" type="password" placeholder="********" />
+  <svg viewBox="0 0 1120 620" preserveAspectRatio="none">
+    <defs>
+      <marker id="ah" markerWidth="12" markerHeight="8" refX="10" refY="4" orient="auto">
+        <polygon points="0,0 12,4 0,8" fill="#ef4444"></polygon>
+      </marker>
+    </defs>
+    <!-- flechas decorativas -->
+    <path class="arrow" d="M 470 205 H 600"/><!-- Esc2 -->
+    <path class="arrow" d="M 410 520 H 560 V 560 H 650 V 500"/><!-- Esc3 -->
+  </svg>
+</div>
 
-      <button>Iniciar sesión</button>
-    </section>
-  </div>
+<script>
+const email = document.querySelector('#regEmail');
+const pass  = document.querySelector('#regPass');
+document.querySelector('#btnReg').addEventListener('click', () => {
+  const e=(email.value||'').toLowerCase(), p=pass.value||'';
+  if(e.includes('ana@')) return show('#mEmail');      // simula email ocupado
+  if(p.length<8)        return show('#mPass');        // simula contraseña débil
+  alert('Registro exitoso (demo)');                   // demo
+});
+document.addEventListener('click', ev=>{
+  const sel=ev.target.getAttribute('data-close'); if(!sel) return;
+  const el=document.querySelector(sel); if(el){ el.style.display='none'; }
+});
+function show(sel){ const el=document.querySelector(sel); if(el){ el.style.display='block'; } }
+</script>
 </body>
 </html>
