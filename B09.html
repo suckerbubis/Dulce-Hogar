@@ -1,1 +1,99 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dulce Hogar — B-09 Boleta digital</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0f16;
+    --grid:#1a2436;
+    --ink:#f4f6fb;
+    --red:#ef4444;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    background:
+      linear-gradient(var(--grid) 1px, transparent 1px) 0 0/32px 32px,
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/32px 32px,
+      var(--bg);
+    color:var(--ink);
+    min-height:100vh;
+    display:flex; justify-content:center; align-items:flex-start;
+    padding:28px;
+  }
+  .stage{position:relative; width:820px; height:740px;}
+  .title{position:absolute; left:8px; top:-6px; font-size:22px; font-weight:700}
 
+  .box{
+    position:absolute; border:2px solid var(--ink); border-radius:10px;
+    background:transparent; color:var(--ink);
+    padding:14px; text-align:center;
+  }
+  .hdr{
+    border-bottom:2px solid var(--ink);
+    padding-bottom:8px; margin-bottom:10px; font-weight:700;
+  }
+  .btn{
+    display:inline-block; margin-top:14px; padding:8px 14px;
+    border:2px solid var(--ink); border-radius:8px; font-weight:700;
+  }
+
+  /* Panel superior: Pedido pagado */
+  #paid{
+    left:150px; top:60px; width:520px;
+  }
+
+  /* Panel inferior: Inbox con boleta */
+  #inbox{
+    left:110px; top:430px; width:600px; padding:16px;
+  }
+  .mail{
+    margin:10px auto 0; width:70%; border:2px solid var(--ink); border-radius:10px; padding:12px;
+  }
+  .ok{display:inline-block; margin-top:12px; padding:6px 12px; border:2px solid var(--ink); border-radius:6px; font-weight:700}
+
+  /* Flecha roja entre paneles */
+  svg.lines{position:absolute; inset:0; pointer-events:none}
+  .arrow{stroke:var(--red); stroke-width:3; fill:none; marker-end:url(#ah)}
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="title">B-09</div>
+
+    <!-- Pedido pagado -->
+    <div class="box" id="paid">
+      <div class="hdr">Pedido PAGADO</div>
+      <div>Pedido #1234</div>
+      <div>Pan integral × 1</div>
+      <div>Facturas × 6</div>
+      <div class="btn">Continuar</div>
+    </div>
+
+    <!-- Inbox / Boleta digital -->
+    <div class="box" id="inbox">
+      <div class="hdr" style="text-align:left;padding-left:10px;">Inbox</div>
+      <div class="mail">
+        <div class="hdr">Boleta digital</div>
+        <div>Boleta #1234</div>
+        <div>Pan integral × 1</div>
+        <div>Facturas × 6</div>
+        <div class="ok">OK</div>
+      </div>
+    </div>
+
+    <!-- Flecha de transición -->
+    <svg class="lines" viewBox="0 0 820 740" preserveAspectRatio="none">
+      <defs>
+        <marker id="ah" markerWidth="12" markerHeight="8" refX="10" refY="4" orient="auto">
+          <polygon points="0,0 12,4 0,8" fill="#ef4444"/>
+        </marker>
+      </defs>
+      <path class="arrow" d="M 410 260 C 410 320, 410 360, 410 420"/>
+    </svg>
+  </div>
+</body>
+</html>
