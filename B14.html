@@ -1,1 +1,113 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dulce Hogar — B-14 Cupones de descuento</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0f16;      /* pizarra */
+    --grid:#1a2436;    /* grilla */
+    --ink:#f4f6fb;     /* tiza */
+    --muted:#c7d0e1;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    background:
+      linear-gradient(var(--grid) 1px, transparent 1px) 0 0/32px 32px,
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/32px 32px,
+      var(--bg);
+    color:var(--ink);
+    min-height:100vh; display:flex; justify-content:center; align-items:flex-start; padding:28px;
+  }
+  .stage{position:relative; width:980px; height:620px;}
+  .title{position:absolute; left:8px; top:-6px; font-size:22px; font-weight:700}
+
+  .panel{
+    position:absolute; left:60px; top:50px; width:860px;
+    border:2px solid var(--ink); border-radius:12px; padding:18px;
+  }
+  .hdr{
+    border-bottom:2px solid var(--ink); padding-bottom:8px; margin-bottom:12px; font-weight:900;
+  }
+
+  /* Tabla carrito */
+  .table{margin-top:6px}
+  .th, .tr{display:grid; grid-template-columns: 1.5fr 0.5fr; gap:12px; align-items:center}
+  .th{font-weight:800; padding:6px 0; border-bottom:2px solid var(--ink)}
+  .tr{padding:10px 0; border-bottom:2px solid var(--ink)}
+  .price{text-align:right}
+
+  /* Cupón */
+  .coupon{
+    display:grid; grid-template-columns: 220px 1fr 180px; gap:16px; align-items:center;
+    margin:18px 0 8px;
+  }
+  .coupon .label{font-weight:800}
+  .coupon input{
+    background:transparent; border:2px solid var(--ink); border-radius:10px; color:var(--ink);
+    height:40px; padding:0 12px; font-weight:800;
+  }
+  .btn{
+    justify-self:start; border:2px solid var(--ink); border-radius:10px; padding:10px 14px; font-weight:800;
+  }
+
+  /* Totales */
+  .totals{display:grid; grid-template-columns: 1fr 140px; gap:12px; margin:8px 0 16px}
+  .totals div{padding:6px 0; font-weight:800}
+  .right{text-align:right}
+  .strike{position:relative}
+  .strike::after{
+    content:""; position:absolute; left:0; right:0; top:50%; height:2px; background:var(--ink);
+    transform:rotate(-6deg);
+  }
+
+  /* Banner error */
+  .banner{
+    border:2px solid var(--ink); border-radius:10px; padding:10px 14px; font-weight:900; text-align:center;
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="title">B-14</div>
+
+    <section class="panel">
+      <div class="hdr">Carrito</div>
+
+      <!-- Tabla -->
+      <div class="table">
+        <div class="th">
+          <div>Producto</div>
+          <div class="price">Total</div>
+        </div>
+        <div class="tr"><div>—</div><div class="price">—</div></div>
+        <div class="tr"><div>—</div><div class="price">—</div></div>
+        <div class="tr"><div>—</div><div class="price">—</div></div>
+      </div>
+
+      <!-- Cupón -->
+      <div class="coupon">
+        <div class="label">Cupón</div>
+        <input type="text" value="DESCUENTO20" />
+        <div class="btn">Aplicar cupón</div>
+      </div>
+
+      <!-- Totales -->
+      <div class="totals">
+        <div>Subtotal:</div>
+        <div class="right strike">$10.000</div>
+
+        <div style="font-weight:900">Total</div>
+        <div class="right" style="font-weight:900">$8.000</div>
+      </div>
+
+      <!-- Error (estado alternativo) -->
+      <div class="banner">Cupón no válido o expirado</div>
+    </section>
+  </div>
+</body>
+</html>
 
