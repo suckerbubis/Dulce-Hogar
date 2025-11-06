@@ -1,1 +1,100 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dulce Hogar — B-06 Detalle de producto</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0f16;
+    --grid:#1a2436;
+    --ink:#f4f6fb;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    background:
+      linear-gradient(var(--grid) 1px, transparent 1px) 0 0/32px 32px,
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/32px 32px,
+      var(--bg);
+    color:var(--ink);
+    min-height:100vh;
+    display:flex; justify-content:center; align-items:flex-start;
+    padding:30px;
+  }
+  .stage{position:relative; width:960px; height:560px;}
+  .title{position:absolute; left:8px; top:-6px; font-size:22px; font-weight:700;}
+
+  /* Caja principal del detalle */
+  .panel{
+    position:absolute; left:40px; top:50px;
+    border:2px solid var(--ink); border-radius:10px;
+    padding:16px; width:540px; height:400px;
+  }
+  .panel h3{
+    margin:0 0 12px; font-size:18px; font-weight:700;
+  }
+  .producto{
+    display:grid; grid-template-columns:160px 1fr; gap:14px; align-items:start;
+  }
+  .img{
+    border:2px solid var(--ink); border-radius:8px; width:150px; height:150px;
+    display:flex; align-items:center; justify-content:center; font-weight:700;
+  }
+  .info p{margin:6px 0; font-weight:600;}
+  .btn{
+    display:inline-block; margin-top:16px; padding:8px 14px;
+    border:2px solid var(--ink); border-radius:8px; font-weight:700;
+  }
+
+  /* Cuadros de actualización a la derecha */
+  .box{
+    position:absolute; right:40px; border:2px solid var(--ink);
+    border-radius:10px; padding:10px 14px; width:260px;
+    text-align:center; font-weight:700;
+  }
+  #box1{top:100px;}
+  #box2{top:220px;}
+
+  /* Flechas rojas (SVG) */
+  svg.lines{position:absolute; inset:0; pointer-events:none;}
+  .arrow{stroke:#ef4444; stroke-width:3; fill:none; marker-end:url(#ah);}
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="title">B-06</div>
+
+    <!-- Panel principal -->
+    <div class="panel">
+      <h3>Detalle de producto</h3>
+      <div class="producto">
+        <div class="img">Pan integral</div>
+        <div class="info">
+          <p>Descripción del producto</p>
+          <p>$1.200</p>
+          <p>15 unidades disponibles</p>
+        </div>
+      </div>
+      <div class="btn">Añadir al carrito</div>
+    </div>
+
+    <!-- Cuadros de actualización -->
+    <div class="box" id="box1">Actualización inicial<br>15 unidades disponibles</div>
+    <div class="box" id="box2">Actualizar stock<br>en tiempo real<br>10 unidades disponibles</div>
+
+    <!-- Flechas rojas -->
+    <svg class="lines" viewBox="0 0 960 560" preserveAspectRatio="none">
+      <defs>
+        <marker id="ah" markerWidth="12" markerHeight="8" refX="10" refY="4" orient="auto">
+          <polygon points="0,0 12,4 0,8" fill="#ef4444"/>
+        </marker>
+      </defs>
+      <path class="arrow" d="M580 180 C660 180, 660 130, 720 130"/>
+      <path class="arrow" d="M720 180 C720 200, 720 210, 720 220"/>
+    </svg>
+  </div>
+</body>
+</html>
 
