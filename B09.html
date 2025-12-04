@@ -1,99 +1,320 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Dulce Hogar — B-09 Boleta digital</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg:#0b0f16;
-    --grid:#1a2436;
-    --ink:#f4f6fb;
-    --red:#ef4444;
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-    background:
-      linear-gradient(var(--grid) 1px, transparent 1px) 0 0/32px 32px,
-      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/32px 32px,
-      var(--bg);
-    color:var(--ink);
-    min-height:100vh;
-    display:flex; justify-content:center; align-items:flex-start;
-    padding:28px;
-  }
-  .stage{position:relative; width:820px; height:740px;}
-  .title{position:absolute; left:8px; top:-6px; font-size:22px; font-weight:700}
-
-  .box{
-    position:absolute; border:2px solid var(--ink); border-radius:10px;
-    background:transparent; color:var(--ink);
-    padding:14px; text-align:center;
-  }
-  .hdr{
-    border-bottom:2px solid var(--ink);
-    padding-bottom:8px; margin-bottom:10px; font-weight:700;
-  }
-  .btn{
-    display:inline-block; margin-top:14px; padding:8px 14px;
-    border:2px solid var(--ink); border-radius:8px; font-weight:700;
-  }
-
-  /* Panel superior: Pedido pagado */
-  #paid{
-    left:150px; top:60px; width:520px;
-  }
-
-  /* Panel inferior: Inbox con boleta */
-  #inbox{
-    left:110px; top:430px; width:600px; padding:16px;
-  }
-  .mail{
-    margin:10px auto 0; width:70%; border:2px solid var(--ink); border-radius:10px; padding:12px;
-  }
-  .ok{display:inline-block; margin-top:12px; padding:6px 12px; border:2px solid var(--ink); border-radius:6px; font-weight:700}
-
-  /* Flecha roja entre paneles */
-  svg.lines{position:absolute; inset:0; pointer-events:none}
-  .arrow{stroke:var(--red); stroke-width:3; fill:none; marker-end:url(#ah)}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Boleta / Recibo — Dulce Hogar</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-  <div class="stage">
-    <div class="title">B-09</div>
-
-    <!-- Pedido pagado -->
-    <div class="box" id="paid">
-      <div class="hdr">Pedido PAGADO</div>
-      <div>Pedido #1234</div>
-      <div>Pan integral × 1</div>
-      <div>Facturas × 6</div>
-      <div class="btn">Continuar</div>
-    </div>
-
-    <!-- Inbox / Boleta digital -->
-    <div class="box" id="inbox">
-      <div class="hdr" style="text-align:left;padding-left:10px;">Inbox</div>
-      <div class="mail">
-        <div class="hdr">Boleta digital</div>
-        <div>Boleta #1234</div>
-        <div>Pan integral × 1</div>
-        <div>Facturas × 6</div>
-        <div class="ok">OK</div>
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">🍞 Dulce Hogar</a>
+      <div>
+        <a href="shop.html" class="btn btn-outline-light btn-sm">Tienda</a>
       </div>
     </div>
+  </nav>
 
-    <!-- Flecha de transición -->
-    <svg class="lines" viewBox="0 0 820 740" preserveAspectRatio="none">
-      <defs>
-        <marker id="ah" markerWidth="12" markerHeight="8" refX="10" refY="4" orient="auto">
-          <polygon points="0,0 12,4 0,8" fill="#ef4444"/>
-        </marker>
-      </defs>
-      <path class="arrow" d="M 410 260 C 410 320, 410 360, 410 420"/>
-    </svg>
-  </div>
+  <main class="container my-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <h2 class="mb-3">Tu Boleta</h2>
+        <div id="receipt" class="card d-none">
+          <div class="card-body">
+            <h5 id="rec-title" class="card-title">Recibo</h5>
+            <div id="rec-body"></div>
+            <div class="mt-4 text-end">
+              <a id="btn-print" class="btn btn-outline-secondary me-2">Imprimir</a>
+              <a id="btn-home" class="btn btn-primary" href="index.html">Volver al inicio</a>
+            </div>
+          </div>
+        </div>
+        <div id="no-data" class="alert alert-warning">No se encontró una boleta para mostrar.</div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function fmt(n){ return '$' + (n||0).toLocaleString('es-CL'); }
+    function getQueryParam(name){ return new URLSearchParams(location.search).get(name); }
+
+    async function fetchOrderFromAPI(id, token){
+      try{
+        const res = await fetch('/api/orders/' + encodeURIComponent(id), { headers: token ? { Authorization: 'Bearer ' + token } : {} });
+        const text = await res.text();
+        try{ return JSON.parse(text); } catch { return null; }
+      }catch(e){ return null; }
+    }
+
+    (async function(){
+      const id = getQueryParam('id');
+      let order = null;
+      // Prefer last saved order in localStorage (set by b08) for quick display
+      const saved = localStorage.getItem('dh_last_order');
+      if(saved){
+        try{ const s = JSON.parse(saved); if(s._id && (!id || id === s._id)) order = s; }catch(e){}
+      }
+
+      // If not present locally, try API if user token exists
+      if(!order && id){
+        const rawUser = localStorage.getItem('dh_user');
+        const token = rawUser ? JSON.parse(rawUser).token : null;
+        if(token){
+          const fromApi = await fetchOrderFromAPI(id, token);
+          if(fromApi && fromApi._id) order = fromApi;
+        }
+      }
+
+      if(!order){ document.getElementById('no-data').classList.remove('d-none'); return; }
+
+      const body = document.getElementById('rec-body');
+      body.innerHTML = '';
+      const h = document.createElement('div'); h.innerHTML = `<div><strong>Orden:</strong> ${order._id}</div>`; body.appendChild(h);
+      if(order.createdAt) body.appendChild(Object.assign(document.createElement('div'), { innerHTML: `<strong>Fecha:</strong> ${new Date(order.createdAt).toLocaleString()}` }));
+      body.appendChild(Object.assign(document.createElement('div'), { innerHTML: `<strong>Estado:</strong> ${order.orderStatus || order.status || 'N/A'}` }));
+      if(order.items && Array.isArray(order.items)){
+        const list = document.createElement('div'); list.className='mt-3'; list.innerHTML = '<strong>Items</strong>';
+        const ul = document.createElement('ul'); ul.className='list-unstyled small';
+        order.items.forEach(it=>{ const li = document.createElement('li'); li.innerHTML = `${it.name || (it.product && it.product.name) || it.product} — ${it.quantity || it.qty} x ${fmt(it.price || (it.product && it.product.price))}`; ul.appendChild(li); });
+        list.appendChild(ul); body.appendChild(list);
+      }
+      if(order.finalTotal != null) body.appendChild(Object.assign(document.createElement('div'), { className: 'mt-3', innerHTML: `<strong>Total:</strong> ${fmt(order.finalTotal)}` }));
+      document.getElementById('receipt').classList.remove('d-none'); document.getElementById('no-data').classList.add('d-none');
+
+      document.getElementById('btn-print').addEventListener('click', ()=> window.print());
+    })();
+  </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dulce Hogar — Pago Exitoso (Bootstrap 5.3.3)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            background-color: var(--bs-body-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .success-card {
+            width: 100%;
+            max-width: 550px;
+            background-color: var(--bs-secondary-bg-subtle);
+            border: 2px solid var(--bs-success);
+            border-radius: 0.75rem;
+            padding: 2.5rem;
+            text-align: center;
+            box-shadow: 0 0.5rem 2rem rgba(var(--bs-success-rgb), 0.2);
+        }
+        .success-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: var(--bs-success);
+        }
+        .order-details {
+            background-color: var(--bs-dark);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            text-align: left;
+        }
+        .email-notice {
+            background-color: rgba(var(--bs-info-rgb), 0.1);
+            border: 1px solid var(--bs-info);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+        /* Timeline Styling */
+        .order-timeline {
+            position: relative;
+            padding: 1rem 0 1rem 1.5rem;
+        }
+        .order-timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 24px;
+            width: 2px;
+            height: 100%;
+            background-color: var(--bs-border-color);
+        }
+        .timeline-step {
+            position: relative;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        .timeline-icon {
+            z-index: 1;
+            width: 40px;
+            height: 40px;
+            background: var(--bs-secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.2rem;
+            color: var(--bs-body-color);
+        }
+        .timeline-step.completed .timeline-icon {
+            background: var(--bs-success);
+            color: white;
+        }
+        .timeline-step.current .timeline-icon {
+            background: var(--bs-primary);
+            color: white;
+        }
+        .social-share {
+            border-top: 1px solid var(--bs-border-color);
+            padding-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-sm-12">
+                <div class="success-card">
+                    <div class="success-icon">
+                        <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                    <h1 class="text-success fw-bolder mb-3">¡Pago Exitoso!</h1>
+                    <p class="text-secondary mb-4">Tu pedido ha sido confirmado y está siendo preparado. ¡Gracias por tu compra!</p>
+                    
+                    <div class="order-details mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted fw-medium">Número de pedido:</span>
+                            <span class="fw-bold">#DH12345678</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted fw-medium">Fecha:</span>
+                            <span class="fw-bold">03 Diciembre 2025, 12:57</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted fw-medium">Método de pago:</span>
+                            <span class="fw-bold">WebPay</span>
+                        </div>
+                        <div class="d-flex justify-content-between pt-2 border-top border-secondary-subtle">
+                            <span class="fw-bolder fs-5 text-light">Total:</span>
+                            <span class="fw-bolder fs-4 text-primary">$4.700</span>
+                        </div>
+                    </div>
+                    
+                    <div class="email-notice mb-4">
+                        <div class="text-info fw-bold mb-1">
+                            <i class="bi bi-envelope-fill me-1"></i> Boleta digital enviada
+                        </div>
+                        <p class="text-secondary small mb-0">
+                            Hemos enviado la boleta digital y los detalles de tu pedido al correo registrado.
+                        </p>
+                    </div>
+                    
+                    <div class="order-timeline">
+                        <div class="timeline-step completed">
+                            <div class="timeline-icon">✓</div>
+                            <div class="timeline-content text-start">
+                                <div class="fw-bold">Pedido confirmado</div>
+                                <div class="text-secondary small">Tu pago ha sido aprobado.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-step current">
+                            <div class="timeline-icon"><i class="bi bi-gear-fill"></i></div>
+                            <div class="timeline-content text-start">
+                                <div class="fw-bold text-primary">En preparación</div>
+                                <div class="text-secondary small">Entrega estimada: 13:42 - 14:12</div>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-step">
+                            <div class="timeline-icon"><i class="bi bi-truck"></i></div>
+                            <div class="timeline-content text-start">
+                                <div class="fw-bold">En camino</div>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-step">
+                            <div class="timeline-icon"><i class="bi bi-house-door"></i></div>
+                            <div class="timeline-content text-start">
+                                <div class="fw-bold">Entregado</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
+                        <button class="btn btn-outline-light fw-bold" onclick="downloadInvoice()">
+                            <i class="bi bi-file-earmark-arrow-down-fill me-1"></i> Descargar boleta
+                        </button>
+                        <a href="index.html" class="btn btn-primary fw-bold">
+                            <i class="bi bi-house-fill me-1"></i> Continuar comprando
+                        </a>
+                    </div>
+                    
+                    <a href="order-tracking.html?order=DH12345678" class="text-secondary d-block mt-3 text-decoration-none fw-bold small">
+                        Seguir estado del pedido en tiempo real →
+                    </a>
+                    
+                    <div class="social-share mt-4">
+                        <p class="text-secondary fw-bold small mb-2">Compartir mi pedido</p>
+                        <div class="d-flex justify-content-center gap-3">
+                            <button class="btn btn-outline-success rounded-circle" onclick="shareOnWhatsApp()"><i class="bi bi-whatsapp"></i></button>
+                            <button class="btn btn-outline-info rounded-circle" onclick="shareOnFacebook()"><i class="bi bi-facebook"></i></button>
+                            <button class="btn btn-outline-secondary rounded-circle" onclick="copyOrderLink()"><i class="bi bi-link"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        // Simulación de la función para mostrar notificaciones (Toast)
+        function showToast(message, type = 'info') {
+            console.log(`[Toast ${type.toUpperCase()}]: ${message}`);
+        }
+
+        // Simulación de descarga de boleta (API Call: GET /api/orders/{orderId}/invoice)
+        function downloadInvoice() {
+            showToast('Iniciando descarga de boleta...', 'info');
+            
+            setTimeout(() => {
+                showToast('Boleta descargada exitosamente (Simulado)', 'success');
+            }, 1500);
+        }
+        
+        // Funciones de compartir (requieren que el navegador soporte navigator.clipboard)
+        function shareOnWhatsApp() {
+            const text = '¡Acabo de pedir panadería artesanal en Dulce Hogar! 🍞';
+            const trackingLink = `${window.location.origin}/order-tracking.html?order=DH12345678`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)} ${encodeURIComponent(trackingLink)}`, '_blank');
+        }
+        
+        function shareOnFacebook() {
+            const url = `${window.location.origin}/order-tracking.html?order=DH12345678`;
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
+        }
+        
+        function copyOrderLink() {
+            const link = `${window.location.origin}/order-tracking.html?order=DH12345678`;
+            navigator.clipboard.writeText(link).then(() => {
+                showToast('Enlace de seguimiento copiado al portapapeles', 'success');
+            }).catch(err => {
+                showToast('Error al copiar el enlace', 'danger');
+            });
+        }
+    </script>
 </body>
 </html>
