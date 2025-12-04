@@ -1,141 +1,279 @@
-<!doctype html>
-<html lang="es">
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Dulce Hogar — B-19 Newsletter</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg:#0b0f16;     /* pizarra */
-    --grid:#1a2436;   /* grilla */
-    --ink:#f4f6fb;    /* tiza */
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-    background:
-      linear-gradient(var(--grid) 1px, transparent 1px) 0 0/32px 32px,
-      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/32px 32px,
-      var(--bg);
-    color:var(--ink);
-    min-height:100vh; display:flex; justify-content:center; align-items:flex-start; padding:28px;
-  }
-  .stage{position:relative; width:1200px; min-height:760px;}
-  .title{position:absolute; left:8px; top:-6px; font-size:22px; font-weight:700}
-
-  /* Columnas */
-  .col{position:absolute; top:40px;}
-  .left{left:20px; width:500px}
-  .right{right:20px; width:640px}
-
-  /* Panel genérico */
-  .panel{border:2px solid var(--ink); border-radius:12px; padding:16px 18px; background:transparent; margin-bottom:18px;}
-  .hdr{font-weight:900; border-bottom:2px solid var(--ink); padding-bottom:8px; margin-bottom:12px;}
-
-  /* Suscripción */
-  .input{
-    width:100%; height:40px; background:transparent; border:2px solid var(--ink);
-    border-radius:10px; color:var(--ink); padding:0 12px; font-weight:800;
-  }
-
-  /* Panel admin (izq) */
-  .row{display:grid; grid-template-columns: 140px 1fr; gap:12px; align-items:center; margin:10px 0}
-  .select, .small{
-    height:40px; background:transparent; border:2px solid var(--ink);
-    border-radius:10px; color:var(--ink); padding:0 12px; font-weight:800; appearance:none;
-  }
-  .small{width:80px}
-  .thumb{height:70px; border:2px solid var(--ink); border-radius:10px}
-  .btn{display:inline-block; border:2px solid var(--ink); border-radius:10px; padding:8px 12px; font-weight:900}
-  .coupon-box{height:110px; border:2px solid var(--ink); border-radius:12px; margin-top:6px}
-
-  /* Vista previa admin (der) */
-  .phone{border:2px solid var(--ink); border-radius:12px; padding:16px}
-  .mail-head{border:2px solid var(--ink); border-radius:10px; height:36px; width:180px; float:right}
-  .card{border:2px solid var(--ink); border-radius:10px; padding:12px; margin-top:12px}
-  .line{height:10px; border-bottom:2px solid var(--ink); margin:8px 0}
-  .imgbar{display:flex; gap:12px; margin:10px 0}
-  .img{width:84px; height:84px; border:2px solid var(--ink); border-radius:10px}
-  .link{display:inline-block; border:2px solid var(--ink); border-radius:10px; padding:6px 10px; margin-top:8px; font-weight:800}
-</style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dulce Hogar — Gestión de Newsletter (Bootstrap 5.3.3)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            background-color: var(--bs-body-bg);
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+        .admin-card {
+            background-color: var(--bs-secondary-bg-subtle);
+            border: 1px solid var(--bs-border-color);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            height: 100%;
+        }
+        .email-preview {
+            background: white;
+            color: #333;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            font-family: Arial, sans-serif;
+            max-width: 450px;
+            margin: 0 auto;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            min-height: 550px;
+        }
+        .email-cta {
+            display: inline-block;
+            background: var(--bs-primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.3rem;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .coupon-preview {
+            height: 110px;
+            background: rgba(var(--bs-warning-rgb), 0.1);
+            border: 2px dashed var(--bs-warning);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--bs-warning);
+            font-family: monospace;
+        }
+    </style>
 </head>
 <body>
-  <div class="stage">
-    <div class="title">B-19</div>
 
-    <!-- Columna izquierda: Suscripción + edición admin básica -->
-    <div class="col left">
-      <section class="panel">
-        <div class="hdr">Suscripción del cliente</div>
-        <input class="input" placeholder="Correo electrónico" />
-      </section>
-
-      <section class="panel">
-        <div class="hdr">Panel de administrador</div>
-
-        <div class="row">
-          <div>Frecuencia</div>
-          <select class="select">
-            <option>Semanal</option>
-            <option>Mensual</option>
-          </select>
+<main class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="text-light fw-bolder">📨 Gestión de Newsletter</h1>
+            <p class="text-secondary">Configura campañas, programa envíos y monitoriza el rendimiento.</p>
         </div>
-
-        <div class="row">
-          <div>Contenido</div>
-          <div style="display:flex; gap:12px; align-items:center">
-            <div class="thumb" style="width:120px"></div>
-            <div class="small"></div>
-            <div class="select" style="width:180px"></div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div>Enlace</div>
-          <div class="btn">Agregar →</div>
-        </div>
-
-        <div class="row" style="grid-template-columns: 1fr">
-          <div class="coupon-box"></div>
-          <div class="btn" style="width:max-content; margin-top:8px">Cupón exclusivo</div>
-        </div>
-      </section>
     </div>
 
-    <!-- Columna derecha: Vista previa del boletín -->
-    <div class="col right">
-      <section class="panel">
-        <div class="hdr">Panel de administrador</div>
-        <div class="phone">
-          <div class="hdr" style="border:none; padding:0; margin:0 0 12px 0">Contenido</div>
-          <div class="mail-head"></div>
-
-          <div class="card">
-            <div style="font-weight:900; font-size:22px; margin-bottom:6px">Dulce Hogar</div>
-            <div style="font-weight:800; margin-bottom:8px">Boletín de novedades</div>
-            <div style="font-weight:800; margin-bottom:8px">Querido cliente</div>
-            <div class="line"></div>
-            <div class="line" style="width:80%"></div>
-
-            <div class="imgbar">
-              <div class="img"></div>
-              <div class="img"></div>
-              <div class="img"></div>
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="admin-card mb-4">
+                <h2 class="fs-5 fw-bolder mb-3 pb-2 border-bottom border-secondary">Suscripción y Rendimiento</h2>
+                
+                <div class="input-group mb-4">
+                    <input type="email" id="subscribe-email" class="form-control bg-dark border-secondary text-light" placeholder="tu@email.com">
+                    <button class="btn btn-primary fw-bold" onclick="subscribeNewsletter()">Suscribirme</button>
+                </div>
+                
+                <div class="row text-center g-2 small fw-bold">
+                    <div class="col-4">
+                        <div class="fs-4 fw-bolder text-warning" id="subscribers-count">1.248</div>
+                        <div class="text-muted">Suscriptores</div>
+                    </div>
+                    <div class="col-4">
+                        <div class="fs-4 fw-bolder text-success">68%</div>
+                        <div class="text-muted">Tasa de Apertura</div>
+                    </div>
+                    <div class="col-4">
+                        <div class="fs-4 fw-bolder text-info">12%</div>
+                        <div class="text-muted">Tasa de Clicks (CTR)</div>
+                    </div>
+                </div>
             </div>
 
-            <div class="line" style="width:60%"></div>
-            <div class="link">Producto destacado</div>
+            <div class="admin-card">
+                <h2 class="fs-5 fw-bolder mb-3 pb-2 border-bottom border-secondary">Configuración de Campaña</h2>
+                
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="campaign-name" class="form-label small text-muted">Nombre de la campaña</label>
+                        <input type="text" id="campaign-name" class="form-control bg-dark border-secondary text-light" value="Boletín de novedades">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="frequency" class="form-label small text-muted">Frecuencia</label>
+                        <select id="frequency" class="form-select bg-dark border-secondary text-light">
+                            <option>Semanal</option><option>Mensual</option>
+                        </select>
+                    </div>
+                    
+                    <div class="col-12">
+                        <label for="featured-product" class="form-label small text-muted">Producto destacado</label>
+                        <select id="featured-product" class="form-select bg-dark border-secondary text-light">
+                            <option>Torta de frutillas</option><option>Pan integral</option>
+                        </select>
+                    </div>
+                    
+                    <div class="col-12">
+                        <label class="form-label small text-muted">Cupón exclusivo</label>
+                        <div class="coupon-preview" id="coupon-preview">CUPÓN: NEWS20</div>
+                        <button class="btn btn-sm btn-outline-warning fw-bold" onclick="generateCoupon()"><i class="bi bi-gift-fill me-1"></i> Generar cupón</button>
+                    </div>
 
-            <div class="line" style="width:70%; margin-top:14px"></div>
-            <div class="link">Promoción especial</div>
-
-            <div class="line" style="width:50%; margin-top:14px"></div>
-            <div class="link">Darse de baja</div>
-          </div>
+                    <div class="col-md-6">
+                        <label for="schedule-date" class="form-label small text-muted">Fecha de envío</label>
+                        <input type="datetime-local" id="schedule-date" class="form-control bg-dark border-secondary text-light">
+                    </div>
+                </div>
+                
+                <div class="d-flex gap-3 mt-4 pt-3 border-top border-secondary-subtle">
+                    <button class="btn btn-success fw-bold" onclick="scheduleNewsletter()"><i class="bi bi-clock-fill me-1"></i> Programar envío</button>
+                    <button class="btn btn-outline-light fw-bold" onclick="testNewsletter()"><i class="bi bi-envelope-fill me-1"></i> Enviar prueba</button>
+                </div>
+            </div>
         </div>
-      </section>
+
+        <div class="col-lg-6">
+            <div class="admin-card mb-4">
+                <h2 class="fs-5 fw-bolder mb-3 pb-2 border-bottom border-secondary">Vista Previa (Email Responsivo)</h2>
+                <div class="email-preview">
+                    <div class="text-center">
+                        <h3 class="fw-bolder text-primary">Dulce Hogar</h3>
+                        <p class="small text-muted border-bottom pb-2">Boletín de novedades - Mayo 2024</p>
+                    </div>
+                    <div class="text-dark">
+                        <h4 class="fw-bolder fs-6 mb-3">🎉 ¡Promociones Exclusivas!</h4>
+                        <div class="row g-2 mb-3">
+                            <div class="col-4 text-center"><i class="bi bi-cake2 fs-3"></i></div>
+                            <div class="col-4 text-center"><i class="bi bi-bagel fs-3"></i></div>
+                            <div class="col-4 text-center"><i class="bi bi-star-fill text-warning fs-3"></i></div>
+                        </div>
+                        <p class="mb-3 small">
+                            Este mes presentamos nuestra nueva línea de productos orgánicos y recetas exclusivas.
+                        </p>
+                        <p class="fw-bold small mb-2">Cupón: NEWS20</p>
+                        <a href="#" class="email-cta fw-bold small">Ver producto destacado</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-card">
+                <h2 class="fs-5 fw-bolder mb-3 pb-2 border-bottom border-secondary">Campañas Programadas</h2>
+                <div class="d-flex justify-content-between align-items-center mb-2 p-2 rounded bg-dark">
+                    <div>
+                        <strong class="text-light">🎉 Día de la Madre</strong>
+                        <div class="small text-muted">Programado para: 08/05 10:00</div>
+                    </div>
+                    <span class="badge bg-success">Programado</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-2 p-2 rounded bg-dark">
+                    <div>
+                        <strong class="text-light">🌱 Productos Orgánicos</strong>
+                        <div class="small text-muted">Programado para: 15/05 09:00</div>
+                    </div>
+                    <span class="badge bg-warning text-dark">Borrador</span>
+                </div>
+                <button class="btn btn-sm btn-outline-primary mt-3" onclick="createNewCampaign()">
+                    <i class="bi bi-plus-lg me-1"></i> Nueva campaña
+                </button>
+            </div>
+        </div>
     </div>
-  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script>
+    const subscribersCountEl = document.getElementById('subscribers-count');
+
+    // Simulación de la función para mostrar notificaciones (Toast)
+    function showToast(message, type = 'info') {
+        console.log(`[Toast ${type.toUpperCase()}]: ${message}`);
+    }
+
+    // --- Lógica de la UI y API (Simulada) ---
+    
+    // Simulación de suscripción (API Call: POST /api/newsletter/subscribe)
+    function subscribeNewsletter() {
+        const emailInput = document.getElementById('subscribe-email');
+        const email = emailInput.value.trim();
+        
+        if (!email || !email.includes('@')) {
+            alert('Por favor ingresa un email válido');
+            return;
+        }
+        
+        // Simulación: Llamada a la API
+        alert(`¡Gracias por suscribirte, ${email}!\n\n(API Call: POST /api/newsletter/subscribe)`);
+        
+        // Actualizar estadísticas (demo)
+        let subscribers = parseInt(subscribersCountEl.textContent.replace(',', '')) || 1248;
+        subscribers++;
+        subscribersCountEl.textContent = subscribers.toLocaleString();
+        emailInput.value = '';
+    }
+    
+    // Simulación de generar cupón (API Call: POST /api/promotions/coupon/generate)
+    function generateCoupon() {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let coupon = '';
+        for (let i = 0; i < 6; i++) {
+            coupon += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        
+        const couponPreview = document.getElementById('coupon-preview');
+        couponPreview.innerHTML = `CUPÓN: ${coupon}`;
+        showToast(`Nuevo cupón "${coupon}" generado y listo para incluir en la campaña.`, 'warning');
+        
+        // API Call implícita para generar código único
+        console.log(`API Call: POST /api/promotions/coupon/generate -> ${coupon}`);
+    }
+    
+    // Simulación de envío de prueba (API Call: POST /api/campaigns/test)
+    function testNewsletter() {
+        const testEmail = prompt('Enviar prueba a:', 'tester@dulcehogar.cl');
+        if (testEmail) {
+            alert(`📨 Newsletter de prueba enviado a: ${testEmail}\n\n(API Call: POST /api/campaigns/test)`);
+        }
+    }
+    
+    // Simulación de programación (API Call: POST /api/campaigns/send)
+    function scheduleNewsletter() {
+        const dateInput = document.getElementById('schedule-date').value;
+        if (!dateInput) {
+            alert('Por favor, selecciona una fecha y hora.');
+            return;
+        }
+        
+        const subscribers = subscribersCountEl.textContent;
+        alert(`✅ Newsletter programado para: ${dateInput}\n\nSe enviará a ${subscribers} suscriptores.\n(API Call: POST /api/campaigns/send)`);
+        
+        // Simulación de agregar a la lista de programados
+        const scheduledList = document.querySelector('.admin-card:nth-child(4) > div:nth-child(2)');
+        const newCampaign = document.createElement('div');
+        newCampaign.className = 'd-flex justify-content-between align-items-center mb-2 p-2 rounded bg-dark';
+        newCampaign.innerHTML = `
+            <div>
+                <strong class="text-light">Nueva Campaña</strong>
+                <div class="small text-muted">Programado para: ${dateInput.replace('T', ' ')}</div>
+            </div>
+            <span class="badge bg-success">Programado</span>
+        `;
+        scheduledList.prepend(newCampaign);
+    }
+    
+    // Simulación de crear nueva campaña
+    function createNewCampaign() {
+        alert('📝 Nueva campaña creada. (API Call: POST /api/campaigns)');
+    }
+    
+    // Inicializar
+    document.addEventListener('DOMContentLoaded', function() {
+        // Establecer fecha por defecto (mañana)
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const formattedDate = tomorrow.toISOString().slice(0, 16);
+        document.getElementById('schedule-date').value = formattedDate;
+    });
+</script>
 </body>
 </html>
