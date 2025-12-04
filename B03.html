@@ -1,122 +1,382 @@
-<!doctype html>
-<html lang="es">
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Dulce Hogar — B-03 Recuperar contraseña</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Source+Code+Pro&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg:#0c0f14;
-    --grid:#1b2536;
-    --panel:#0f1520;
-    --stroke:#e6e6e6;
-    --text:#e9edf5;
-    --muted:#b9c1d1;
-    --red:#f43f5e;
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0; background:var(--bg); color:var(--text);
-    font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-    min-height:100vh; display:grid; place-items:center; padding:20px;
-  }
-  .stage{
-    position:relative; width:1100px; height:650px; border:1px solid #22304a; border-radius:10px;
-    background:
-      linear-gradient(var(--grid) 1px, transparent 1px) 0 0/32px 32px,
-      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/32px 32px,
-      var(--panel);
-    overflow:hidden; padding:24px;
-  }
-
-  /* ----- Bloques ----- */
-  .box{
-    position:absolute; background:transparent; color:var(--text);
-    border:2px solid var(--stroke); border-radius:8px; padding:12px;
-  }
-  .title{font-weight:700; margin-bottom:10px; letter-spacing:.2px}
-  .label{font-size:13px; color:var(--muted); margin-bottom:6px}
-  .input{
-    width:100%; height:36px; background:transparent; border:2px solid var(--stroke);
-    border-radius:6px; color:var(--text); padding:0 10px; margin-bottom:10px; outline:none;
-  }
-  .btn{
-    display:inline-block; padding:8px 12px; border:2px solid var(--stroke);
-    color:var(--text); background:transparent; border-radius:6px; font-weight:700;
-  }
-  .dialog .body{font-size:14px; margin:8px 0 10px}
-  .dialog .ok{display:inline-block; padding:6px 12px; border:2px solid var(--stroke); border-radius:6px}
-
-  /* API card */
-  .api{font-family:"Source Code Pro", ui-monospace, monospace; font-size:13px}
-  .api .sig{margin-top:6px}
-
-  /* Flechas rojas (SVG overlay) */
-  svg.lines{position:absolute; inset:0; pointer-events:none}
-  .arrow{stroke:var(--red); stroke-width:3; fill:none; marker-end:url(#ah)}
-
-  /* Puntos azules decorativos como en tu captura */
-  .dot{
-    position:absolute; right:10px; top:10px; width:12px; height:12px;
-    border-radius:50%; border:2px solid #9ec8ff;
-  }
-
-  /* Posiciones aproximadas para coincidir con tu imagen */
-  #form   {left:60px;  top:70px;  width:360px}
-  #okDlg  {left:520px; top:90px;  width:260px}
-  #expDlg {left:520px; top:290px; width:280px}
-  #apiBox {left:90px;  top:380px; width:300px}
-</style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dulce Hogar — Recuperar Contraseña (Bootstrap 5.3.3)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bs-body-bg);
+        }
+        .forgot-password-box {
+            max-width: 500px;
+            width: 100%;
+            background-color: var(--bs-secondary-bg-subtle);
+            border: 1px solid var(--bs-border-color);
+            border-radius: 0.5rem;
+            padding: 3rem 2rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5);
+        }
+        .forgot-password-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        .steps-line {
+            position: absolute;
+            top: 20px;
+            left: 20%;
+            right: 20%;
+            height: 2px;
+            background: var(--bs-border-color);
+        }
+        .step {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            flex: 1;
+        }
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--bs-border-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            font-weight: 700;
+            color: var(--bs-body-color);
+            transition: background 0.3s;
+        }
+        .step.active .step-icon {
+            background: var(--bs-primary);
+            color: white;
+        }
+        .step.completed .step-icon {
+            background: var(--bs-success);
+            color: white;
+        }
+        .step-content {
+            display: none;
+        }
+        .step-content.active {
+            display: block;
+        }
+        .countdown {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--bs-primary);
+            margin: 1rem 0;
+        }
+        .resend-link {
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .resend-link.disabled {
+            color: var(--bs-secondary-color) !important;
+            cursor: not-allowed;
+        }
+    </style>
 </head>
 <body>
-  <div class="stage">
-    <!-- Formulario -->
-    <div class="box" id="form">
-      <div class="title">Recuperar contraseña</div>
-      <div class="label">correo electrónico</div>
-      <input class="input" type="email" placeholder="usuario@correo.com">
-      <button class="btn">Enviar enlace de recuperación</button>
-    </div>
 
-    <!-- Diálogo Éxito -->
-    <div class="box dialog" id="okDlg">
-      <div class="dot" aria-hidden="true"></div>
-      <div class="title">Éxito</div>
-      <div class="body">Se ha enviado un enlace a su correo</div>
-      <div class="ok">OK</div>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-sm-10 col-md-10 col-lg-8">
+            <div class="forgot-password-box text-center text-light">
+                <div class="forgot-password-icon">🔑</div>
+                <h1 class="forgot-password-title fw-bold">Recuperar Contraseña</h1>
+                <p class="text-secondary mb-4">Ingresa tu correo electrónico para recibir instrucciones de recuperación.</p>
+                
+                <div class="steps">
+                    <div class="steps-line"></div>
+                    <div class="step active" id="step1">
+                        <div class="step-icon">1</div>
+                        <div class="step-label text-secondary">Email</div>
+                    </div>
+                    <div class="step" id="step2">
+                        <div class="step-icon">2</div>
+                        <div class="step-label text-secondary">Código</div>
+                    </div>
+                    <div class="step" id="step3">
+                        <div class="step-icon">3</div>
+                        <div class="step-label text-secondary">Nueva Contraseña</div>
+                    </div>
+                </div>
+                
+                <div id="message-container" class="mb-4 text-start"></div>
+                
+                <div class="step-content active" id="step1-content">
+                    <form id="email-form" class="text-start">
+                        <div class="mb-3">
+                            <label for="email" class="form-label text-secondary">Correo electrónico</label>
+                            <input type="email" id="email" class="form-control" placeholder="usuario@example.com" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 fw-bold mt-2" id="send-code-btn">
+                            Enviar código de recuperación
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="step-content" id="step2-content">
+                    <p class="text-secondary">
+                        Hemos enviado un código de 6 dígitos a tu correo. Ingresa el código para continuar.
+                    </p>
+                    <div class="mb-3 text-start">
+                        <label for="code" class="form-label text-secondary">Código de verificación</label>
+                        <input type="text" id="code" class="form-control" placeholder="123456" maxlength="6" required>
+                    </div>
+                    
+                    <div class="countdown" id="countdown">05:00</div>
+                    
+                    <p class="small text-secondary">
+                        ¿No recibiste el código? 
+                        <span id="resend-link" class="link-primary resend-link disabled">Reenviar en 00:30</span>
+                    </p>
+                    
+                    <button class="btn btn-primary w-100 fw-bold mt-3" id="verify-code-btn">
+                        Verificar código
+                    </button>
+                </div>
+                
+                <div class="step-content" id="step3-content">
+                    <form id="password-form" class="text-start">
+                        <div class="mb-3">
+                            <label for="new-password" class="form-label text-secondary">Nueva contraseña</label>
+                            <input type="password" id="new-password" class="form-control" placeholder="Mínimo 8 caracteres" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="confirm-password" class="form-label text-secondary">Confirmar nueva contraseña</label>
+                            <input type="password" id="confirm-password" class="form-control" placeholder="Repite la contraseña" required>
+                        </div>
+                        
+                        <div class="text-muted small mb-3">
+                            <p class="fw-bold mb-1">Requisitos de contraseña:</p>
+                            <ul>
+                                <li>Mínimo 8 caracteres</li>
+                                <li>Al menos una letra mayúscula</li>
+                                <li>Al menos un número</li>
+                            </ul>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-success w-100 fw-bold" id="reset-password-btn">
+                            Cambiar contraseña
+                        </button>
+                    </form>
+                </div>
+                
+                <a href="login.html" class="link-secondary d-block mt-4 text-decoration-none fw-bold">← Volver al inicio de sesión</a>
+            </div>
+        </div>
     </div>
+</div>
 
-    <!-- Diálogo Token caducado -->
-    <div class="box dialog" id="expDlg">
-      <div class="title">Token caducado</div>
-      <div class="body">
-        Dado que intento usar un token después de 15 minutos
-      </div>
-      <div class="ok">OK</div>
-    </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script>
+    let currentStep = 1;
+    let countdownInterval;
+    let resendCountdown = 30;
+    let resendInterval;
+    let userEmail = '';
+    const EXPIRATION_TIME = 5 * 60; // 5 minutos en segundos
 
-    <!-- API -->
-    <div class="box api" id="apiBox">
-      <div class="title">API::recuperar</div>
-      <div>+ email : String</div>
-      <div class="sig">→ Response : Token : String</div>
-    </div>
+    document.addEventListener('DOMContentLoaded', setupEventListeners);
+    
+    // --- Lógica de Eventos ---
+    function setupEventListeners() {
+        document.getElementById('email-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            sendRecoveryEmail();
+        });
+        document.getElementById('verify-code-btn').addEventListener('click', verifyCode);
+        document.getElementById('password-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            resetPassword();
+        });
+        document.getElementById('resend-link').addEventListener('click', function() {
+            if (!this.classList.contains('disabled')) {
+                resendCode();
+            }
+        });
+    }
+    
+    // --- Lógica del API (Simulada) ---
+    function sendRecoveryEmail() {
+        const email = document.getElementById('email').value;
+        const btn = document.getElementById('send-code-btn');
+        
+        if (!isValidEmail(email)) {
+            showMessage('Ingresa un email válido', 'danger');
+            return;
+        }
+        
+        btn.disabled = true;
+        btn.textContent = 'Enviando...';
+        
+        // Simulación: Llamada a API::recuperar
+        setTimeout(() => {
+            userEmail = email;
+            showMessage(`Se ha enviado un código a ${email}`, 'success');
+            goToStep(2);
+            startCountdown(); // Iniciar temporizador de expiración de token
+            btn.disabled = false;
+            btn.textContent = 'Enviar código de recuperación';
+        }, 1500);
+    }
+    
+    function verifyCode() {
+        const code = document.getElementById('code').value;
+        const btn = document.getElementById('verify-code-btn');
+        
+        if (code.length !== 6) {
+            showMessage('El código debe tener 6 dígitos', 'danger');
+            return;
+        }
+        
+        btn.disabled = true;
+        btn.textContent = 'Verificando...';
+        
+        // Simulación: Verificar el código/token con el API
+        setTimeout(() => {
+            if (document.getElementById('countdown').textContent === 'Código expirado') {
+                 // Simulación de error: Token caducado (expDlg en B03.html)
+                showMessage('El código ha expirado. Solicita uno nuevo.', 'danger');
+            } else if (code === '123456') { // Código de ejemplo
+                showMessage('Código verificado correctamente', 'success');
+                clearInterval(countdownInterval);
+                goToStep(3);
+            } else {
+                showMessage('Código incorrecto. Intenta nuevamente.', 'danger');
+            }
+            
+            btn.disabled = false;
+            btn.textContent = 'Verificar código';
+        }, 1000);
+    }
+    
+    function resetPassword() {
+        const newPassword = document.getElementById('new-password').value;
+        const confirmPassword = document.getElementById('confirm-password').value;
+        const btn = document.getElementById('reset-password-btn');
+        
+        if (newPassword !== confirmPassword) {
+            showMessage('Las contraseñas no coinciden', 'danger');
+            return;
+        }
+        
+        // Validaciones de seguridad de contraseña
+        if (newPassword.length < 8 || !/[A-Z]/.test(newPassword) || !/[0-9]/.test(newPassword)) {
+            showMessage('La contraseña no cumple con los requisitos de seguridad (Mín. 8 caracteres, mayúscula, número)', 'danger');
+            return;
+        }
+        
+        btn.disabled = true;
+        btn.textContent = 'Cambiando contraseña...';
+        
+        // Simulación: Llamada final al API para cambiar la contraseña
+        setTimeout(() => {
+            showMessage('¡Contraseña cambiada exitosamente!', 'success');
+            
+            setTimeout(() => {
+                window.location.href = 'login.html'; // Redirigir al login
+            }, 2000);
+        }, 1500);
+    }
+    
+    function resendCode() {
+        if (userEmail) {
+            showMessage(`Código reenviado a ${userEmail}`, 'info');
+            startCountdown(); // Reinicia el temporizador de expiración y reenvío
+        }
+    }
 
-    <!-- Conexiones (flechas rojas) -->
-    <svg class="lines" viewBox="0 0 1100 650" preserveAspectRatio="none">
-      <defs>
-        <marker id="ah" markerWidth="12" markerHeight="8" refX="10" refY="4" orient="auto">
-          <polygon points="0,0 12,4 0,8" fill="#f43f5e"/>
-        </marker>
-      </defs>
-      <!-- form -> éxito -->
-      <path class="arrow" d="M 420 140 C 470 140, 470 130, 520 130"/>
-      <!-- éxito -> token caducado (vertical) -->
-      <path class="arrow" d="M 650 180 C 650 220, 660 240, 660 290"/>
-      <!-- form -> API -->
-      <path class="arrow" d="M 280 230 C 280 300, 280 330, 240 380"/>
-    </svg>
-  </div>
+    // --- Lógica de Interfaz de Usuario ---
+    function goToStep(step) {
+        document.querySelectorAll('.step').forEach(s => s.classList.remove('active', 'completed'));
+        document.querySelectorAll('.step-content').forEach(c => c.classList.remove('active'));
+        
+        for (let i = 1; i <= step; i++) {
+            const stepEl = document.getElementById(`step${i}`);
+            if (i < step) {
+                stepEl.classList.add('completed');
+            } else if (i === step) {
+                stepEl.classList.add('active');
+            }
+        }
+        document.getElementById(`step${step}-content`).classList.add('active');
+        currentStep = step;
+    }
+    
+    function startCountdown() {
+        let timeLeft = EXPIRATION_TIME;
+        const countdownEl = document.getElementById('countdown');
+        const resendLink = document.getElementById('resend-link');
+        
+        clearInterval(countdownInterval);
+        
+        countdownInterval = setInterval(() => {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            
+            countdownEl.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (timeLeft <= 0) {
+                clearInterval(countdownInterval);
+                countdownEl.textContent = 'Código expirado';
+            }
+            timeLeft--;
+        }, 1000);
+        
+        // Countdown para reenviar
+        resendCountdown = 30;
+        resendLink.classList.add('disabled');
+        
+        clearInterval(resendInterval);
+        resendInterval = setInterval(() => {
+            resendCountdown--;
+            resendLink.textContent = `Reenviar en ${resendCountdown}s`;
+            
+            if (resendCountdown <= 0) {
+                clearInterval(resendInterval);
+                resendLink.classList.remove('disabled');
+                resendLink.textContent = 'Reenviar código';
+            }
+        }, 1000);
+    }
+    
+    function showMessage(text, type) {
+        const container = document.getElementById('message-container');
+        const alert = document.createElement('div');
+        // Usar clases de Bootstrap alert-success, alert-danger, alert-info
+        alert.className = `alert alert-${type} mb-3`; 
+        alert.setAttribute('role', 'alert');
+        alert.textContent = text;
+        
+        container.innerHTML = '';
+        container.appendChild(alert);
+        
+        // Eliminar mensaje después de 5 segundos
+        setTimeout(() => { alert.remove(); }, 5000);
+    }
+    
+    function isValidEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+</script>
 </body>
 </html>
