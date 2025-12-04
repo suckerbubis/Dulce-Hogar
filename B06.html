@@ -1,100 +1,361 @@
-<!doctype html>
-<html lang="es">
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Dulce Hogar — B-06 Detalle de producto</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg:#0b0f16;
-    --grid:#1a2436;
-    --ink:#f4f6fb;
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-    background:
-      linear-gradient(var(--grid) 1px, transparent 1px) 0 0/32px 32px,
-      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/32px 32px,
-      var(--bg);
-    color:var(--ink);
-    min-height:100vh;
-    display:flex; justify-content:center; align-items:flex-start;
-    padding:30px;
-  }
-  .stage{position:relative; width:960px; height:560px;}
-  .title{position:absolute; left:8px; top:-6px; font-size:22px; font-weight:700;}
-
-  /* Caja principal del detalle */
-  .panel{
-    position:absolute; left:40px; top:50px;
-    border:2px solid var(--ink); border-radius:10px;
-    padding:16px; width:540px; height:400px;
-  }
-  .panel h3{
-    margin:0 0 12px; font-size:18px; font-weight:700;
-  }
-  .producto{
-    display:grid; grid-template-columns:160px 1fr; gap:14px; align-items:start;
-  }
-  .img{
-    border:2px solid var(--ink); border-radius:8px; width:150px; height:150px;
-    display:flex; align-items:center; justify-content:center; font-weight:700;
-  }
-  .info p{margin:6px 0; font-weight:600;}
-  .btn{
-    display:inline-block; margin-top:16px; padding:8px 14px;
-    border:2px solid var(--ink); border-radius:8px; font-weight:700;
-  }
-
-  /* Cuadros de actualización a la derecha */
-  .box{
-    position:absolute; right:40px; border:2px solid var(--ink);
-    border-radius:10px; padding:10px 14px; width:260px;
-    text-align:center; font-weight:700;
-  }
-  #box1{top:100px;}
-  #box2{top:220px;}
-
-  /* Flechas rojas (SVG) */
-  svg.lines{position:absolute; inset:0; pointer-events:none;}
-  .arrow{stroke:#ef4444; stroke-width:3; fill:none; marker-end:url(#ah);}
-</style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dulce Hogar — Detalle de Producto (Bootstrap 5.3.3)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            background-color: var(--bs-body-bg);
+            padding-top: 2rem;
+        }
+        .main-image {
+            width: 100%;
+            height: 400px;
+            background-color: var(--bs-secondary-bg);
+            border: 2px solid var(--bs-border-color);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+        .thumbnail {
+            width: 80px;
+            height: 80px;
+            border: 2px solid var(--bs-border-color);
+            border-radius: 0.3rem;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .thumbnail.active {
+            border-color: var(--bs-primary);
+        }
+        .product-stock-box {
+            background-color: var(--bs-secondary-bg-subtle);
+            border-radius: 0.3rem;
+            padding: 1rem;
+        }
+        .reviews-section {
+            border-top: 1px solid var(--bs-border-color);
+            padding-top: 2rem;
+            margin-top: 3rem;
+        }
+    </style>
 </head>
 <body>
-  <div class="stage">
-    <div class="title">B-06</div>
 
-    <!-- Panel principal -->
-    <div class="panel">
-      <h3>Detalle de producto</h3>
-      <div class="producto">
-        <div class="img">Pan integral</div>
-        <div class="info">
-          <p>Descripción del producto</p>
-          <p>$1.200</p>
-          <p>15 unidades disponibles</p>
+<main class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html" class="text-secondary text-decoration-none">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="catalog.html" class="text-secondary text-decoration-none">Catálogo</a></li>
+            <li class="breadcrumb-item active text-light" aria-current="page">Pan Integral</li>
+        </ol>
+    </nav>
+
+    <div class="row g-5">
+        <div class="col-lg-6">
+            <div class="product-images">
+                <div class="main-image" id="main-image">
+                    <span style="font-size: 4rem;">🍞</span>
+                </div>
+                
+                <div class="d-flex gap-2 overflow-auto image-thumbnails">
+                    <div class="thumbnail active text-center pt-3" data-content="🍞"><span>🍞</span></div>
+                    <div class="thumbnail text-center pt-3" data-content="📸1"><span>📸</span></div>
+                    <div class="thumbnail text-center pt-3" data-content="📸2"><span>📸</span></div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="btn">Añadir al carrito</div>
+
+        <div class="col-lg-6">
+            <span class="text-secondary small fw-bold text-uppercase">Pan</span>
+            <h1 class="product-title fw-bolder mb-3">Pan Integral Artesanal</h1>
+            
+            <div class="d-flex align-items-center mb-3">
+                <span class="text-warning">★★★★☆</span>
+                <span class="small text-secondary ms-2">(24 reseñas)</span>
+            </div>
+            
+            <div class="product-price mb-4">
+                <span class="current-price text-primary fs-2 fw-bolder">$1.200</span>
+                <span class="original-price text-secondary text-decoration-line-through ms-2">$1.500</span>
+                <span class="badge bg-danger ms-2">-20%</span>
+            </div>
+            
+            <p class="product-description text-secondary">
+                Nuestro pan integral artesanal es elaborado con harina integral de trigo de primera calidad, mezclada con semillas de lino, chía y avena. Horneado diariamente para garantizar frescura y sabor.
+            </p>
+            
+            <ul class="list-unstyled mb-4">
+                <li class="text-success"><i class="bi bi-check-circle-fill me-2"></i> Hecho con harina integral 100% natural</li>
+                <li class="text-success"><i class="bi bi-check-circle-fill me-2"></i> Rico en fibra y nutrientes</li>
+                <li class="text-success"><i class="bi bi-check-circle-fill me-2"></i> Sin conservantes artificiales</li>
+            </ul>
+            
+            <div class="product-stock-box mb-4 d-flex align-items-center gap-2">
+                <i id="stock-icon" class="bi bi-check-circle-fill text-success fs-4"></i>
+                <div>
+                    <div id="stock-text" class="fw-bold text-light">Disponible</div>
+                    <div id="stock-count" class="small text-secondary">15 unidades en stock (inicial)</div>
+                </div>
+            </div>
+            
+            <div class="quantity-selector mb-4">
+                <label class="form-label text-secondary fw-bold">Cantidad</label>
+                <div class="input-group" style="max-width: 200px;">
+                    <button class="btn btn-outline-secondary" type="button" id="decrease-qty">-</button>
+                    <input type="number" class="form-control text-center bg-transparent text-light fw-bold" id="quantity" value="1" min="1" max="15">
+                    <button class="btn btn-outline-secondary" type="button" id="increase-qty">+</button>
+                </div>
+            </div>
+            
+            <div class="product-actions d-flex gap-3 mb-4">
+                <button class="btn btn-primary btn-lg fw-bold flex-grow-1" id="add-to-cart">
+                    <i class="bi bi-cart-fill me-2"></i> Añadir al carrito
+                </button>
+                <button class="btn btn-outline-danger btn-lg" id="add-wishlist">
+                    <i class="bi bi-heart"></i>
+                </button>
+            </div>
+            
+            <div class="row row-cols-2 g-3 small">
+                <div class="col">
+                    <span class="text-muted d-block">SKU</span>
+                    <span class="fw-bold">PI-001</span>
+                </div>
+                <div class="col">
+                    <span class="text-muted d-block">Entrega</span>
+                    <span class="fw-bold">24-48 horas</span>
+                </div>
+                <div class="col">
+                    <span class="text-muted d-block">Categoría</span>
+                    <span class="fw-bold">Pan</span>
+                </div>
+                <div class="col">
+                    <span class="text-muted d-block">Etiquetas</span>
+                    <span class="fw-bold">Integral, Saludable</span>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Cuadros de actualización -->
-    <div class="box" id="box1">Actualización inicial<br>15 unidades disponibles</div>
-    <div class="box" id="box2">Actualizar stock<br>en tiempo real<br>10 unidades disponibles</div>
+    <div class="reviews-section">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="h4 fw-bold mb-0 text-light">Reseñas de clientes</h2>
+            <button class="btn btn-outline-primary" id="write-review">Escribir reseña</button>
+        </div>
+        
+        <div class="card bg-secondary-subtle border-secondary mb-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div>
+                        <div class="fw-bold">María González</div>
+                        <span class="text-warning">★★★★★</span>
+                    </div>
+                    <div class="small text-muted">Hace 2 días</div>
+                </div>
+                <p class="card-text small text-secondary">"Excelente pan, muy fresco y con un sabor delicioso. Llegó perfectamente empaquetado y justo a tiempo. ¡Lo recomiendo!"</p>
+            </div>
+        </div>
+    </div>
+</main>
 
-    <!-- Flechas rojas -->
-    <svg class="lines" viewBox="0 0 960 560" preserveAspectRatio="none">
-      <defs>
-        <marker id="ah" markerWidth="12" markerHeight="8" refX="10" refY="4" orient="auto">
-          <polygon points="0,0 12,4 0,8" fill="#ef4444"/>
-        </marker>
-      </defs>
-      <path class="arrow" d="M580 180 C660 180, 660 130, 720 130"/>
-      <path class="arrow" d="M720 180 C720 200, 720 210, 720 220"/>
-    </svg>
-  </div>
+    <!-- App scripts -->
+    <script src="assets/js/shop.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script>
+    let currentStock = 15;
+    const maxStock = 15;
+    
+    // Función para simular el toast de notificaciones (simplificada de showToast)
+    function showToast(message, type = 'info') {
+        console.log(`[Toast ${type.toUpperCase()}]: ${message}`);
+        // En una implementación real, se mostraría una notificación visual.
+    }
+
+    // Función para simular la actualización del stock en tiempo real (WebSockets/Polling)
+    function simulateStockUpdate() {
+        // Después de 5 segundos, simula que el stock cambia de 15 a 10
+        setTimeout(() => {
+            currentStock = 10;
+            updateStockDisplay(currentStock);
+            showToast('¡Alerta de Stock! La disponibilidad de Pan Integral ha bajado a 10 unidades.', 'warning');
+        }, 5000); 
+    }
+
+    function updateStockDisplay(stock) {
+        const stockCountEl = document.getElementById('stock-count');
+        const stockTextEl = document.getElementById('stock-text');
+        const stockIconEl = document.getElementById('stock-icon');
+        const qtyInput = document.getElementById('quantity');
+        const maxQty = Math.min(stock, maxStock);
+        
+        stockCountEl.textContent = `${stock} unidades en stock (actualizado)`;
+        qtyInput.setAttribute('max', maxQty);
+        
+        if (stock === 0) {
+            stockTextEl.textContent = 'Agotado';
+            stockIconEl.className = 'bi bi-x-circle-fill text-danger fs-4';
+            document.getElementById('add-to-cart').disabled = true;
+        } else if (stock <= 5) {
+            stockTextEl.textContent = 'Pocas unidades';
+            stockIconEl.className = 'bi bi-exclamation-triangle-fill text-warning fs-4';
+        } else {
+            stockTextEl.textContent = 'Disponible';
+            stockIconEl.className = 'bi bi-check-circle-fill text-success fs-4';
+            document.getElementById('add-to-cart').disabled = false;
+        }
+
+        // Asegurar que la cantidad seleccionada no supere el nuevo stock
+        if (parseInt(qtyInput.value) > maxQty) {
+            qtyInput.value = maxQty || 1; 
+        }
+    }
+
+    // Use shop.js cart function if available; otherwise fallback to in-page simulation
+    function addToCart(productId, quantity) {
+        try{
+            const raw = localStorage.getItem('dh_selected_product');
+            const prod = raw ? JSON.parse(raw) : null;
+            if(typeof window.addToCart === 'function'){
+                // shop.js addToCart now supports a quantity parameter: add once with quantity
+                if(prod && prod._id){
+                    window.addToCart(prod._id, prod, quantity);
+                } else {
+                    const minimal = { _id: productId, name: document.querySelector('.product-title')?.textContent || 'Producto' };
+                    window.addToCart(productId, minimal, quantity);
+                }
+                showToast(`Se añadieron ${quantity} unidades al carrito.`, 'success');
+                // update visible count
+                try{ const c = document.getElementById('cart-count'); if(c) c.textContent = (parseInt(c.textContent)||0) + quantity; }catch(_){ }
+                return;
+            }
+        }catch(e){ console.warn('addToCart fallback', e); }
+        // fallback
+        console.log(`[API Call] (fallback) Añadiendo ${quantity} de ${productId} al carrito.`);
+        showToast(`Se añadieron ${quantity} unidades al carrito.`, 'success');
+        const cartCount = document.getElementById('cart-count');
+        if(cartCount) cartCount.textContent = parseInt(cartCount.textContent || '0') + quantity;
+    }
+    
+    // Simulación de la función getCurrentUser (para Reseñas)
+    function getCurrentUser() {
+        // Devuelve un objeto si el usuario está logueado, o null.
+        return true; // Asumimos logueado para la demo de reseña
+    }
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Iniciar la simulación de actualización de stock
+        simulateStockUpdate();
+        
+        // Manejar cantidad
+        document.getElementById('decrease-qty').addEventListener('click', function() {
+            const input = document.getElementById('quantity');
+            let value = parseInt(input.value) || 1;
+            if (value > 1) {
+                value--;
+                input.value = value;
+            }
+        });
+        
+        document.getElementById('increase-qty').addEventListener('click', function() {
+            const input = document.getElementById('quantity');
+            let value = parseInt(input.value) || 1;
+            const maxQty = parseInt(input.getAttribute('max')) || 1;
+            if (value < maxQty) {
+                value++;
+                input.value = value;
+            }
+        });
+        
+        // Añadir al carrito
+        document.getElementById('add-to-cart').addEventListener('click', function() {
+                const quantity = parseInt(document.getElementById('quantity').value) || 1;
+                let productId = 'producto-123';
+                try{ const raw = localStorage.getItem('dh_selected_product'); if(raw){ const p = JSON.parse(raw); if(p && p._id) productId = p._id; } }catch(_){ }
+                addToCart(productId, quantity);
+        });
+        
+        // Wishlist (Simulación de API Call: POST /api/wishlist/add)
+        let inWishlist = false;
+        document.getElementById('add-wishlist').addEventListener('click', function() {
+            inWishlist = !inWishlist;
+            const icon = this.querySelector('i');
+            if(inWishlist) {
+                icon.className = 'bi bi-heart-fill';
+                icon.style.color = 'var(--bs-danger)';
+            } else {
+                icon.className = 'bi bi-heart';
+                icon.style.color = 'inherit';
+            }
+            showToast(inWishlist ? 'Añadido a favoritos' : 'Removido de favoritos', 'info');
+        });
+        
+        // Cambiar imágenes
+        document.querySelectorAll('.thumbnail').forEach(thumb => {
+            thumb.addEventListener('click', function() {
+                document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                const mainImage = document.getElementById('main-image');
+                mainImage.innerHTML = `<span style="font-size: 4rem;">${this.getAttribute('data-content')}</span>`;
+            });
+        });
+        
+        // Escribir reseña (Simulación de API Call: POST /api/reviews)
+        document.getElementById('write-review').addEventListener('click', function() {
+            if (!getCurrentUser()) {
+                showToast('Debes iniciar sesión para escribir una reseña', 'warning');
+                return;
+            }
+            const review = prompt('Escribe tu reseña sobre este producto:');
+            if (review && review.trim()) {
+                console.log(`[API Call] Enviando reseña: "${review.substring(0, 30)}..."`);
+                showToast('¡Gracias por tu reseña! Será publicada después de la moderación.', 'success');
+            }
+        });
+    
+        // Populate page from selected product saved in localStorage (if present)
+        try{
+            const raw = localStorage.getItem('dh_selected_product');
+            if(raw){
+                const prod = JSON.parse(raw);
+                const fmt = (n)=> '$' + (n||0).toLocaleString('es-CL');
+                // Title & description
+                const titleEl = document.querySelector('.product-title'); if(titleEl) titleEl.textContent = prod.name || titleEl.textContent;
+                const descEl = document.querySelector('.product-description'); if(descEl) descEl.textContent = prod.description || descEl.textContent;
+                // Price
+                const priceEl = document.querySelector('.current-price'); if(priceEl) priceEl.textContent = fmt(prod.price);
+                const origEl = document.querySelector('.original-price'); if(origEl){ if(prod.originalPrice){ origEl.textContent = fmt(prod.originalPrice); } else { origEl.style.display = 'none'; } }
+                // Breadcrumb last
+                const bc = document.querySelector('.breadcrumb-item.active'); if(bc) bc.textContent = prod.category || prod.name || bc.textContent;
+                // Main image
+                const main = document.getElementById('main-image'); if(main){
+                let src = prod.image || '';
+                    if(src && !src.startsWith('http') && !src.startsWith('/')) src = '/assets/img/' + src;
+                    if(src){ main.innerHTML = `<img src="${src}" style="max-width:100%; max-height:100%; object-fit:contain;" onerror="this.onerror=null;this.src='/assets/img/placeholder.svg'">`; }
+                }
+                // SKU / delivery / category / tags
+                const cols = document.querySelectorAll('.row.row-cols-2 .col');
+                if(cols && cols.length>=4){
+                    try{ if(prod.sku) cols[0].querySelector('.fw-bold').textContent = prod.sku; }catch(_){ }
+                    try{ cols[1].querySelector('.fw-bold').textContent = prod.delivery || cols[1].querySelector('.fw-bold').textContent; }catch(_){ }
+                    try{ cols[2].querySelector('.fw-bold').textContent = prod.category || cols[2].querySelector('.fw-bold').textContent; }catch(_){ }
+                    try{ cols[3].querySelector('.fw-bold').textContent = (prod.tags && Array.isArray(prod.tags)) ? prod.tags.join(', ') : (prod.tags || cols[3].querySelector('.fw-bold').textContent); }catch(_){ }
+                }
+                // Stock
+                try{ if(typeof updateStockDisplay === 'function') updateStockDisplay(prod.stock || currentStock); }catch(_){ }
+            }
+        }catch(e){ console.warn('Error populating product detail', e); }
+    });
+</script>
 </body>
 </html>
-
