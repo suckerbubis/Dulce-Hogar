@@ -1,109 +1,505 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Dulce Hogar — B-12 Reporte de ventas</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg:#0b0f16;
-    --grid:#1a2436;
-    --ink:#f4f6fb;
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-    background:
-      linear-gradient(var(--grid) 1px, transparent 1px) 0 0/32px 32px,
-      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/32px 32px,
-      var(--bg);
-    color:var(--ink);
-    min-height:100vh;
-    display:flex; justify-content:center; align-items:flex-start; padding:32px;
-  }
-
-  .stage{position:relative; width:980px; height:720px;}
-  .title{position:absolute; left:8px; top:-6px; font-size:22px; font-weight:700}
-
-  .panel{
-    position:absolute; top:60px; left:60px; width:800px;
-    border:2px solid var(--ink); border-radius:10px;
-    padding:20px 24px; background:transparent;
-  }
-  h3{margin:0 0 12px; font-size:20px; font-weight:700}
-  .filters{margin-bottom:16px;}
-  .option-row{margin-bottom:10px;}
-  label{margin-right:18px; font-weight:600;}
-
-  .inputs{
-    display:flex; align-items:center; gap:12px; margin-top:10px;
-  }
-  input[type="text"]{
-    background:transparent; border:2px solid var(--ink);
-    border-radius:8px; color:var(--ink);
-    padding:6px 10px; width:120px;
-  }
-  .btn{
-    display:inline-block; margin-top:14px;
-    padding:8px 14px; border:2px solid var(--ink);
-    border-radius:8px; font-weight:700;
-  }
-
-  /* Resultados */
-  .results{margin-top:22px;}
-  .results h4{margin:8px 0; font-weight:700;}
-  .metric{margin-left:20px; font-weight:600; margin-bottom:8px;}
-
-  /* Botones de exportación */
-  .exports{
-    margin-top:24px; display:flex; gap:16px;
-  }
-  .exp-btn{
-    border:2px solid var(--ink); border-radius:8px;
-    padding:8px 14px; font-weight:700; cursor:default;
-  }
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Orden de Despacho — Dulce Hogar</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
-  <div class="stage">
-    <div class="title">B-12</div>
-
-    <div class="panel">
-      <h3>Reporte de Ventas</h3>
-
-      <div class="filters">
-        <div class="option-row">
-          <label><input type="radio" name="periodo"> Día</label>
-          <label><input type="radio" name="periodo"> Semana</label>
-          <label><input type="radio" name="periodo"> Mes</label>
-          <label><input type="radio" name="periodo"> Rango personalizado</label>
-        </div>
-
-        <div class="inputs">
-          <label>Inicio:</label>
-          <input type="text" placeholder="Inicio">
-          <label>Final:</label>
-          <input type="text" placeholder="Final">
-        </div>
-
-        <div class="btn">Generar reporte</div>
-      </div>
-
-      <div class="results">
-        <h4>Resultados</h4>
-        <div class="metric">Total de ventas: $0</div>
-        <div class="metric">Cantidad de pedidos: 0</div>
-        <div class="metric">Productos más vendidos: _______</div>
-        <div class="metric">Comparativa con períodos anteriores: _______</div>
-      </div>
-
-      <div class="exports">
-        <div class="exp-btn">Exportar como PDF</div>
-        <div class="exp-btn">Exportar como Excel</div>
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">🍞 Dulce Hogar</a>
+      <div>
+        <a href="b11.html" class="btn btn-outline-light btn-sm">Seguimiento</a>
+        <a href="shop.html" class="btn btn-outline-light btn-sm ms-2">Tienda</a>
       </div>
     </div>
-  </div>
+  </nav>
+
+  <main class="container my-5">
+    <div class="row justify-content-center">
+      <div class="col-md-10">
+        <h2 class="mb-3">Panel de Despacho</h2>
+        <p class="text-muted">Busca una orden por su ID y marca su estado de despacho. Requiere iniciar sesión con un usuario admin para actualizar en el servidor; si no, la página simula la acción.</p>
+
+        <div class="card mb-4 p-3">
+          <div class="input-group">
+            <input id="dispatchSearch" class="form-control" placeholder="Ej: DH12345678 o _id de Mongo" />
+            <button id="btnDispatchSearch" class="btn btn-primary">Buscar</button>
+          </div>
+          <div id="dispatchMsg" class="mt-2 small text-muted"></div>
+        </div>
+
+        <div id="dispatchCard" class="card d-none">
+          <div class="card-body">
+            <div class="d-flex justify-content-between mb-3">
+              <div><strong id="dispOrderId">--</strong><div id="dispCreatedAt" class="small text-secondary"></div></div>
+              <div><span id="dispStatus" class="badge bg-secondary">--</span></div>
+            </div>
+
+            <div id="dispItems" class="mb-3 small text-secondary"></div>
+
+            <div class="row g-2">
+              <div class="col-md-4">
+                <label class="form-label small">Estado</label>
+                <select id="dispStatusSelect" class="form-select">
+                  <option value="prepare">En preparación</option>
+                  <option value="onway">En camino</option>
+                  <option value="delivered">Entregado</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label small">Número de tracking</label>
+                <input id="dispTracking" class="form-control" placeholder="Tracking #" />
+              </div>
+              <div class="col-md-4 d-flex align-items-end">
+                <button id="btnUpdateDispatch" class="btn btn-success w-100">Actualizar estado</button>
+              </div>
+            </div>
+
+            <div id="dispatchResult" class="mt-3"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function getToken(){ try{ const raw = localStorage.getItem('dh_user'); if(!raw) return null; const u = JSON.parse(raw); return u.token || null;}catch(e){return null;} }
+    function fmt(n){ return '$' + (n||0).toLocaleString('es-CL'); }
+
+    async function fetchOrder(id){
+      try{
+        const token = getToken();
+        const res = await fetch('/api/orders/' + encodeURIComponent(id), { headers: token ? { Authorization: 'Bearer ' + token } : {} });
+        const text = await res.text(); try{ return JSON.parse(text); } catch { return { error: text || ('HTTP ' + res.status) }; }
+      }catch(e){ return { error: 'Error de conexión' }; }
+    }
+
+    async function updateOrderStatus(id, status, tracking){
+      const token = getToken();
+      if(!token){ return { error: 'No autorizado (inicia sesión como admin para actualizar)' }; }
+      try{
+        const res = await fetch('/api/orders/' + encodeURIComponent(id) + '/status', { method: 'PUT', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token }, body: JSON.stringify({ orderStatus: status, trackingNumber: tracking }) });
+        const text = await res.text(); try{ return JSON.parse(text); } catch { return { error: text || ('HTTP ' + res.status) }; }
+      }catch(e){ return { error: 'Error de red' }; }
+    }
+
+    function renderOrder(order){
+      document.getElementById('dispOrderId').textContent = order._id || order.id || '—';
+      document.getElementById('dispCreatedAt').textContent = order.createdAt ? new Date(order.createdAt).toLocaleString() : '';
+      document.getElementById('dispStatus').textContent = order.orderStatus || order.status || '—';
+      document.getElementById('dispItems').innerHTML = '';
+      if(Array.isArray(order.items)){
+        order.items.forEach(it=>{ const div = document.createElement('div'); div.textContent = `${it.name || (it.product && it.product.name) || it.product} — ${it.quantity || it.qty} x ${fmt(it.price || (it.product && it.product.price))}`; document.getElementById('dispItems').appendChild(div); });
+      }
+      document.getElementById('dispTracking').value = order.trackingNumber || '';
+      document.getElementById('dispatchCard').classList.remove('d-none');
+    }
+
+    document.getElementById('btnDispatchSearch').addEventListener('click', async ()=>{
+      const id = document.getElementById('dispatchSearch').value.trim(); const msg = document.getElementById('dispatchMsg'); msg.textContent=''; if(!id){ msg.textContent='Ingresa un ID'; return; }
+      msg.textContent = 'Buscando...';
+      const res = await fetchOrder(id);
+      if(res && res._id){ renderOrder(res); msg.textContent = 'Orden cargada'; } else { msg.textContent = 'No se encontró la orden (' + (res.error || '') + ')'; }
+    });
+
+    document.getElementById('btnUpdateDispatch').addEventListener('click', async ()=>{
+      const id = document.getElementById('dispOrderId').textContent; const status = document.getElementById('dispStatusSelect').value; const tracking = document.getElementById('dispTracking').value.trim(); const result = document.getElementById('dispatchResult'); result.innerHTML='';
+      if(!id || id==='--'){ result.innerHTML = '<div class="alert alert-warning small">Carga una orden primero</div>'; return; }
+      result.innerHTML = '<div class="small text-muted">Actualizando...</div>';
+      const res = await updateOrderStatus(id, status, tracking);
+      if(res && res._id){ renderOrder(res); result.innerHTML = '<div class="alert alert-success small">Estado actualizado en servidor</div>'; }
+      else { result.innerHTML = '<div class="alert alert-info small">Respuesta: ' + (res.error || JSON.stringify(res)) + '</div>'; }
+    });
+
+    // Make Enter key trigger search
+    document.getElementById('dispatchSearch').addEventListener('keydown',(e)=>{ if(e.key==='Enter'){ e.preventDefault(); document.getElementById('btnDispatchSearch').click(); } });
+  </script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dulce Hogar — Reportes de Ventas (Bootstrap 5.3.3)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            background-color: var(--bs-body-bg);
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+        .filters-card, .stat-card, .chart-card, .table-card {
+            background-color: var(--bs-secondary-bg-subtle);
+            border: 1px solid var(--bs-border-color);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            height: 100%; /* Asegura que las cards se alineen */
+        }
+        .period-options button, .report-type-options button {
+            transition: all 0.2s;
+        }
+        .period-options button.active, .report-type-options button.active {
+            background-color: var(--bs-primary) !important;
+            border-color: var(--bs-primary) !important;
+            color: white !important;
+        }
+        .stat-change.positive {
+            background-color: rgba(var(--bs-success-rgb), 0.1);
+            color: var(--bs-success);
+        }
+        .stat-change.negative {
+            background-color: rgba(var(--bs-danger-rgb), 0.1);
+            color: var(--bs-danger);
+        }
+        .chart-placeholder {
+            height: 300px;
+            background-color: var(--bs-dark);
+            border-radius: 0.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bs-secondary);
+            font-weight: 700;
+        }
+        .export-btn:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
 
+<main class="container">
+    <div class="reports-header mb-4">
+        <h1 class="text-light fw-bolder">Reportes de Ventas 📊</h1>
+        <p class="text-secondary">Analiza el rendimiento del negocio y toma decisiones informadas.</p>
+    </div>
+
+    <div class="filters-card mb-4">
+        <h3 class="fs-5 fw-bolder mb-3 pb-2 border-bottom border-secondary">Opciones de Filtro</h3>
+        
+        <div class="filter-section mb-3">
+            <div class="small fw-bold text-muted text-uppercase mb-2">Período</div>
+            <div class="period-options d-flex flex-wrap gap-2" id="period-options">
+                <button class="btn btn-outline-secondary active" data-period="hoy">Hoy</button>
+                <button class="btn btn-outline-secondary" data-period="semana">Esta semana</button>
+                <button class="btn btn-outline-secondary" data-period="mes">Este mes</button>
+                <button class="btn btn-outline-secondary" data-period="personalizado">Rango personalizado</button>
+            </div>
+        </div>
+        
+        <div class="filter-section mb-3" id="custom-range" style="display: none;">
+            <div class="small fw-bold text-muted text-uppercase mb-2">Rango de Fechas</div>
+            <div class="d-flex align-items-center gap-2">
+                <input type="date" class="form-control" id="start-date">
+                <span class="fw-bold text-muted">a</span>
+                <input type="date" class="form-control" id="end-date">
+            </div>
+        </div>
+
+        <div class="filter-section mb-4">
+            <div class="small fw-bold text-muted text-uppercase mb-2">Tipo de Datos</div>
+            <div class="period-options d-flex flex-wrap gap-2" id="report-type-options">
+                <button class="btn btn-outline-secondary active" data-type="ventas">Ventas</button>
+                <button class="btn btn-outline-secondary" data-type="productos">Productos</button>
+                <button class="btn btn-outline-secondary" data-type="clientes">Clientes</button>
+            </div>
+        </div>
+        
+        <div class="filter-actions d-flex gap-3">
+            <button class="btn btn-primary fw-bold" onclick="generateReport()" id="btn-generate-report">
+                <i class="bi bi-arrow-clockwise me-1"></i> Generar reporte
+            </button>
+            <button class="btn btn-outline-light fw-bold" onclick="exportReport()">
+                <i class="bi bi-box-arrow-down-right me-1"></i> Exportar datos
+            </button>
+        </div>
+    </div>
+
+    <div class="row g-4 stats-grid">
+        <div class="col-md-6 col-lg-3">
+            <div class="stat-card">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <i class="bi bi-currency-dollar fs-3 text-success"></i>
+                    <span class="stat-change positive small rounded-pill p-1">↑ 12%</span>
+                </div>
+                <div class="stat-title small text-muted">Ventas Totales</div>
+                <div class="stat-value fw-bolder text-light">$1,250,000</div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-3">
+            <div class="stat-card">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <i class="bi bi-box-seam fs-3 text-info"></i>
+                    <span class="stat-change negative small rounded-pill p-1">↓ 5%</span>
+                </div>
+                <div class="stat-title small text-muted">Pedidos Totales</div>
+                <div class="stat-value fw-bolder text-light">45</div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-3">
+            <div class="stat-card">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <i class="bi bi-people-fill fs-3 text-warning"></i>
+                    <span class="stat-change positive small rounded-pill p-1">↑ 8%</span>
+                </div>
+                <div class="stat-title small text-muted">Clientes Activos</div>
+                <div class="stat-value fw-bolder text-light">89</div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-3">
+            <div class="stat-card">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <i class="bi bi-receipt fs-3 text-primary"></i>
+                    <span class="stat-change positive small rounded-pill p-1">↑ 15%</span>
+                </div>
+                <div class="stat-title small text-muted">Ticket Promedio</div>
+                <div class="stat-value fw-bolder text-light">$27,778</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mt-3 charts-container">
+        <div class="col-lg-8">
+            <div class="chart-card">
+                <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary-subtle">
+                    <h3 class="fs-5 fw-bolder mb-0">Ventas por período</h3>
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-outline-primary active" data-chart="semana">Semana</button>
+                        <button class="btn btn-outline-primary" data-chart="mes">Mes</button>
+                        <button class="btn btn-outline-primary" data-chart="trimestre">Trimestre</button>
+                    </div>
+                </div>
+                <div class="chart-placeholder">
+                    Gráfico de línea (Ventas vs Tiempo)
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="chart-card">
+                <h3 class="fs-5 fw-bolder mb-3 pb-2 border-bottom border-secondary-subtle">Distribución por Categoría</h3>
+                <div class="chart-placeholder">
+                    Gráfico de torta (Pan vs Pasteles vs Facturas)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mt-3 tables-container">
+        <div class="col-lg-6">
+            <div class="table-card overflow-hidden">
+                <div class="p-3 border-bottom border-secondary-subtle d-flex justify-content-between align-items-center">
+                    <h3 class="fs-5 fw-bolder mb-0">Productos Top 5</h3>
+                    <button class="btn btn-sm btn-outline-primary">Ver detalle</button>
+                </div>
+                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                    <table class="table table-dark table-striped table-hover small mb-0">
+                        <thead>
+                            <tr>
+                                <th class="sticky-top bg-dark">Producto</th>
+                                <th class="sticky-top bg-dark text-center">Ventas (u)</th>
+                                <th class="sticky-top bg-dark">Tendencia</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><i class="bi bi-box me-1"></i> Pan Integral</td>
+                                <td class="text-center">120</td>
+                                <td class="text-success fw-bold">↑ 15%</td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-box me-1"></i> Facturas x6</td>
+                                <td class="text-center">85</td>
+                                <td class="text-success fw-bold">↑ 8%</td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-box me-1"></i> Torta de Frutillas</td>
+                                <td class="text-center">42</td>
+                                <td class="text-success fw-bold">↑ 22%</td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-box me-1"></i> Pan Francés</td>
+                                <td class="text-center">38</td>
+                                <td class="text-danger fw-bold">↓ 5%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="table-card overflow-hidden">
+                <div class="p-3 border-bottom border-secondary-subtle d-flex justify-content-between align-items-center">
+                    <h3 class="fs-5 fw-bolder mb-0">Clientes Top 5</h3>
+                    <button class="btn btn-sm btn-outline-primary">Ver detalle</button>
+                </div>
+                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                    <table class="table table-dark table-striped table-hover small mb-0">
+                        <thead>
+                            <tr>
+                                <th class="sticky-top bg-dark">Cliente</th>
+                                <th class="sticky-top bg-dark text-center">Pedidos</th>
+                                <th class="sticky-top bg-dark text-end">Total Gastado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Ana García</td>
+                                <td class="text-center">8</td>
+                                <td class="text-end">$156,400</td>
+                            </tr>
+                            <tr>
+                                <td>Carlos López</td>
+                                <td class="text-center">6</td>
+                                <td class="text-end">$98,200</td>
+                            </tr>
+                            <tr>
+                                <td>María Rodríguez</td>
+                                <td class="text-center">5</td>
+                                <td class="text-end">$87,500</td>
+                            </tr>
+                            <tr>
+                                <td>Juan Pérez</td>
+                                <td class="text-center">4</td>
+                                <td class="text-end">$65,800</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="export-options d-flex justify-content-center gap-3 mt-5">
+        <button class="btn export-btn fw-bold pdf" onclick="exportToPDF()">
+            <i class="bi bi-file-pdf-fill me-1"></i> Exportar a PDF
+        </button>
+        <button class="btn export-btn fw-bold excel" onclick="exportToExcel()">
+            <i class="bi bi-file-earmark-spreadsheet-fill me-1"></i> Exportar a Excel
+        </button>
+        <button class="btn export-btn fw-bold" onclick="exportToCSV()">
+            <i class="bi bi-file-earmark-text me-1"></i> Exportar a CSV
+        </button>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        setupFilters();
+        // Simulación: No verificar usuario admin en la demo
+    });
+    
+    // --- Lógica de la UI y API (Simulada) ---
+
+    // Simulación de la función para mostrar notificaciones (Toast)
+    function showToast(message, type = 'info') {
+        console.log(`[Toast ${type.toUpperCase()}]: ${message}`);
+    }
+
+    function setupFilters() {
+        // Período
+        document.querySelectorAll('#period-options button').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('#period-options button').forEach(o => o.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Mostrar/ocultar rango personalizado
+                document.getElementById('custom-range').style.display = 
+                    (this.dataset.period === 'personalizado') ? 'flex' : 'none';
+            });
+        });
+        
+        // Tipo de reporte
+        document.querySelectorAll('#report-type-options button').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('#report-type-options button').forEach(o => o.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // Selectores de gráficos (Ventas por período)
+        document.querySelectorAll('.btn-group-sm button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.btn-group-sm button').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                console.log('Cambiando gráfico a:', this.dataset.chart);
+            });
+        });
+        
+        // Fechas por defecto
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('start-date').value = today;
+        document.getElementById('end-date').value = today;
+    }
+    
+    // Simulación de la función para generar reporte (API Call: GET /api/reports/sales?...)
+    function generateReport() {
+        const period = document.querySelector('#period-options button.active').dataset.period;
+        const type = document.querySelector('#report-type-options button.active').dataset.type;
+        
+        let dateRange = '';
+        if (period === 'personalizado') {
+            dateRange = ` (${document.getElementById('start-date').value} a ${document.getElementById('end-date').value})`;
+        }
+        
+        const btn = document.getElementById('btn-generate-report');
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Generando...';
+        btn.disabled = true;
+
+        showToast(`Llamada API para reporte de ${type} para ${period}${dateRange}...`, 'info');
+        
+        // Simulación de generación de reporte y actualización de UI
+        setTimeout(() => {
+            showToast('Reporte generado exitosamente', 'success');
+            btn.innerHTML = '<i class="bi bi-arrow-clockwise me-1"></i> Generar reporte';
+            btn.disabled = false;
+        }, 2000);
+    }
+    
+    // Simulación de la función para exportar datos (API Call: GET /api/reports/export?...)
+    function exportReport() {
+        showToast('Llamada API para exportar datos en formato JSON/CSV...', 'info');
+        setTimeout(() => { showToast('Datos exportados exitosamente', 'success'); }, 1500);
+    }
+    
+    function exportToPDF() {
+        // Simulación: Llama a la API con format=PDF
+        showToast('Llamada API para generar PDF...', 'info');
+        setTimeout(() => {
+            showToast('PDF generado y descargado (Simulado)', 'success');
+        }, 2000);
+    }
+    
+    function exportToExcel() {
+        // Simulación: Llama a la API con format=Excel
+        showToast('Llamada API para generar Excel...', 'info');
+        setTimeout(() => {
+            showToast('Excel generado y descargado (Simulado)', 'success');
+        }, 2000);
+    }
+    
+    function exportToCSV() {
+        // Simulación: Llama a la API con format=CSV
+        showToast('Llamada API para generar CSV...', 'info');
+        setTimeout(() => {
+            showToast('CSV generado y descargado (Simulado)', 'success');
+        }, 1500);
+    }
+</script>
+</body>
+</html>
