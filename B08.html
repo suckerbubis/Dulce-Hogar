@@ -1,129 +1,391 @@
-<!doctype html>
-<html lang="es">
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Dulce Hogar — B-08 Pasarela de pago</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg:#0b0f16;
-    --grid:#1a2436;
-    --ink:#f4f6fb;
-    --red:#ef4444;
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-    background:
-      linear-gradient(var(--grid) 1px, transparent 1px) 0 0/32px 32px,
-      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/32px 32px,
-      var(--bg);
-    color:var(--ink);
-    min-height:100vh;
-    display:flex; justify-content:center; align-items:flex-start; padding:28px;
-  }
-  .stage{position:relative; width:980px; height:560px;}
-  .title{position:absolute; left:8px; top:-6px; font-size:22px; font-weight:700}
-
-  .box{
-    position:absolute; border:2px solid var(--ink); border-radius:10px;
-    background:transparent; color:var(--ink);
-  }
-
-  /* Panel principal */
-  #panel{
-    left:60px; top:60px; width:700px; padding:14px;
-  }
-  .panel-title{
-    border:2px solid var(--ink); border-radius:8px; padding:6px 10px;
-    font-weight:700; text-align:center; margin-bottom:10px;
-  }
-
-  .section{margin-top:10px; border-top:2px solid var(--ink); padding-top:10px}
-  .row{display:grid; grid-template-columns: 1fr 120px 120px; gap:12px; margin:6px 0}
-  .head{font-weight:700}
-  .methods{margin-top:8px}
-  .btn-pay{
-    position:absolute; right:20px; top:200px;
-    border:2px solid var(--ink); border-radius:8px; padding:10px 12px; font-weight:700;
-  }
-
-  /* Modales */
-  #okModal, #badModal{
-    width:230px; padding:12px; text-align:center;
-  }
-  #okModal{left:180px; bottom:80px}
-  #badModal{right:120px; bottom:80px}
-  .m-title{font-weight:700; margin-bottom:6px}
-  .ok{
-    display:inline-block; margin-top:10px; padding:6px 12px;
-    border:2px solid var(--ink); border-radius:6px; font-weight:700;
-  }
-
-  /* Flechas rojas (SVG) */
-  svg.lines{position:absolute; inset:0; pointer-events:none}
-  .arrow{stroke:var(--red); stroke-width:3; fill:none; marker-end:url(#ah)}
-</style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dulce Hogar — Pasarela de Pago (Bootstrap 5.3.3)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            background-color: var(--bs-body-bg);
+            padding-top: 2rem;
+        }
+        .checkout-header {
+            margin-bottom: 2rem;
+        }
+        .step {
+            padding: 1rem;
+            border: 1px solid var(--bs-border-color);
+            border-radius: 0.3rem;
+        }
+        .step.active {
+            border-color: var(--bs-primary);
+            background-color: rgba(var(--bs-primary-rgb), 0.1);
+        }
+        .step.completed {
+            border-color: var(--bs-success);
+            background-color: rgba(var(--bs-success-rgb), 0.1);
+        }
+        .step-number {
+            background: var(--bs-border-color);
+            color: var(--bs-body-color);
+        }
+        .step.active .step-number {
+            background: var(--bs-primary);
+            color: white;
+        }
+        .step.completed .step-number {
+            background: var(--bs-success);
+            color: white;
+        }
+        .checkout-section {
+            background-color: var(--bs-secondary-bg-subtle);
+            border: 1px solid var(--bs-border-color);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .order-summary, .payment-methods {
+            position: sticky;
+            top: 2rem;
+        }
+        .payment-method {
+            border: 2px solid var(--bs-border-color);
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+        .payment-method:hover {
+            border-color: var(--bs-primary);
+        }
+        .payment-method.selected {
+            border-color: var(--bs-primary);
+            background-color: rgba(var(--bs-primary-rgb), 0.1);
+        }
+    </style>
 </head>
 <body>
-  <div class="stage">
-    <div class="title">B-08</div>
 
-    <!-- Panel principal -->
-    <div class="box" id="panel">
-      <div class="panel-title">Dulce Hogar — Pasarela de pago</div>
-
-      <div class="section">
-        <div class="head">Resumen del pedido:</div>
-        <div class="row head">
-          <div>Item</div><div>Precio</div><div>Total</div>
+<main class="container">
+    <div class="checkout-header">
+        <h1 class="text-light fw-bolder">Finalizar Compra</h1>
+        
+        <div class="checkout-steps row g-2">
+            <div class="step completed col" id="step1">
+                <div class="step-number mx-auto mb-2 rounded-circle d-flex align-items-center justify-content-center" style="width:36px; height:36px;">1</div>
+                <div class="step-label fw-bold small">Información</div>
+            </div>
+            <div class="step active col" id="step2">
+                <div class="step-number mx-auto mb-2 rounded-circle d-flex align-items-center justify-content-center" style="width:36px; height:36px;">2</div>
+                <div class="step-label fw-bold small">Pago</div>
+            </div>
+            <div class="step col" id="step3">
+                <div class="step-number mx-auto mb-2 rounded-circle d-flex align-items-center justify-content-center" style="width:36px; height:36px;">3</div>
+                <div class="step-label fw-bold small">Confirmación</div>
+            </div>
         </div>
-        <div class="row">
-          <div>Pan integral x1</div><div>$1.200</div><div>$1.200</div>
-        </div>
-        <div class="row">
-          <div>Facturas x6</div><div>$2.000</div><div>$2.000</div>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="head">Método de pago</div>
-        <div class="methods">
-          • WebPay<br>
-          • Transferencia
-        </div>
-      </div>
-
-      <div class="btn-pay">Pagar ahora</div>
     </div>
 
-    <!-- Modales de resultado -->
-    <div class="box" id="okModal">
-      <div class="m-title">Pago aprobado</div>
-      <div>Estado: Pagado</div>
-      <div class="ok">OK</div>
-    </div>
+    <div class="checkout-container row g-4">
+        <div class="col-lg-8">
+            <div class="checkout-section">
+                <h2 class="fs-5 fw-bolder mb-3 pb-2 border-bottom border-secondary">Método de pago</h2>
+                
+                <div class="payment-methods row g-3" id="payment-methods">
+                    <div class="col">
+                        <div class="payment-method text-center p-3 rounded" data-method="webpay" id="webpay-method">
+                            <div class="payment-icon">💳</div>
+                            <div class="payment-name fw-bold">WebPay</div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="payment-method text-center p-3 rounded" data-method="transferencia" id="transferencia-method">
+                            <div class="payment-icon">🏦</div>
+                            <div class="payment-name fw-bold">Transferencia</div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="payment-method text-center p-3 rounded" data-method="efectivo" id="efectivo-method">
+                            <div class="payment-icon">💵</div>
+                            <div class="payment-name fw-bold">Efectivo</div>
+                        </div>
+                    </div>
+                </div>
 
-    <div class="box" id="badModal">
-      <div class="m-title">Pago rechazado</div>
-      <div>Estado: Pendiente</div>
-      <div class="ok">OK</div>
-    </div>
+                <div id="payment-details-container" class="mt-4">
+                    <div id="webpay-details" class="p-3 border rounded border-primary bg-dark d-none">
+                        <p class="text-light fw-bold">Simulación de Pasarela WebPay/Tarjeta</p>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="card-number" placeholder="Número de tarjeta" required>
+                            <label for="card-number" class="text-secondary">Número de tarjeta</label>
+                        </div>
+                        <button class="btn btn-success w-100 fw-bold" id="btn-simulate-webpay">Pagar con WebPay (Simular)</button>
+                    </div>
+                    
+                    <div id="transferencia-details" class="p-3 border rounded border-secondary bg-dark d-none">
+                        <p class="text-light fw-bold">Instrucciones de Transferencia</p>
+                        <p class="small text-secondary mb-1">Realiza la transferencia por el total ($3.700 CLP, simulado) a:</p>
+                        <p class="mb-0 small"><strong>Banco:</strong> Banco X, <strong>Cuenta:</strong> 1234567890</p>
+                    </div>
 
-    <!-- Conexiones (Pagar ahora -> modales) -->
-    <svg class="lines" viewBox="0 0 980 560" preserveAspectRatio="none">
-      <defs>
-        <marker id="ah" markerWidth="12" markerHeight="8" refX="10" refY="4" orient="auto">
-          <polygon points="0,0 12,4 0,8" fill="#ef4444"/>
-        </marker>
-      </defs>
-      <!-- Desde botón pagar hacia modal OK -->
-      <path class="arrow" d="M 540 240 C 520 300, 440 360, 300 420"/>
-      <!-- Desde botón pagar hacia modal Rechazado -->
-      <path class="arrow" d="M 540 240 C 640 300, 720 360, 820 420"/>
-    </svg>
-  </div>
+                    <div id="efectivo-details" class="p-3 border rounded border-secondary bg-dark d-none">
+                        <p class="text-light fw-bold">Pago en Efectivo</p>
+                        <p class="small text-secondary mb-0">Paga al repartidor al recibir tu pedido. Llevará cambio si es necesario.</p>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="cart.html" class="btn btn-secondary fw-bold">← Volver al carrito</a>
+                    <button class="btn btn-primary fw-bold" id="btn-complete-order" disabled>Completar pedido</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="checkout-section order-summary">
+                <h2 class="fs-5 fw-bolder mb-3 pb-2 border-bottom border-secondary">Resumen del pedido</h2>
+                
+                <div class="order-items" id="order-items">
+                    <div class="d-flex justify-content-between small py-2 border-bottom border-secondary-subtle">
+                        <span class="text-light">Pan integral x1</span>
+                        <span class="fw-bold">$1.200</span>
+                    </div>
+                    <div class="d-flex justify-content-between small py-2 border-bottom border-secondary-subtle">
+                        <span class="text-light">Facturas x6</span>
+                        <span class="fw-bold">$2.000</span>
+                    </div>
+                </div>
+                
+                <div class="order-total pt-3">
+                    <div class="d-flex justify-content-between small text-secondary">
+                        <span>Subtotal</span>
+                        <span>$3.200</span>
+                    </div>
+                    <div class="d-flex justify-content-between small text-secondary">
+                        <span>Envío</span>
+                        <span>$500</span>
+                    </div>
+                    <div class="d-flex justify-content-between pt-3 align-items-center">
+                        <span class="fs-5 fw-bolder">Total</span>
+                        <span class="fs-3 fw-bolder text-primary">$3.700</span>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-3 small text-secondary">
+                    <i class="bi bi-lock-fill me-1"></i> Pago 100% seguro
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div class="modal fade" id="okModal" tabindex="-1" aria-labelledby="okModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content bg-success text-white">
+            <div class="modal-body text-center">
+                <i class="bi bi-check-circle-fill display-5 mb-2"></i>
+                <h5 class="fw-bold">Pago Aprobado</h5>
+                <p class="mb-0">Tu pedido está en preparación.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="badModal" tabindex="-1" aria-labelledby="badModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content bg-danger text-white">
+            <div class="modal-body text-center">
+                <i class="bi bi-x-octagon-fill display-5 mb-2"></i>
+                <h5 class="fw-bold">Pago Rechazado</h5>
+                <p class="mb-0">Por favor, intenta con otro método de pago.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script>
+    let selectedPaymentMethod = null;
+    const okModal = new bootstrap.Modal(document.getElementById('okModal'));
+    const badModal = new bootstrap.Modal(document.getElementById('badModal'));
+
+    function formatCurrency(n){ return '$' + (n).toLocaleString('es-CL'); }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadOrderSummary();
+        setupPaymentMethods();
+        document.getElementById('btn-complete-order').addEventListener('click', completeOrder);
+        document.getElementById('btn-simulate-webpay').addEventListener('click', simulateWebpayPayment);
+    });
+
+    // Cargar resumen del pedido desde dh_pending_order
+    function loadOrderSummary(){
+        const raw = localStorage.getItem('dh_pending_order');
+        if(!raw) { console.warn('No dh_pending_order found'); return; }
+        try{
+            const pending = JSON.parse(raw);
+            // Renderizar items
+            const itemsContainer = document.getElementById('order-items');
+            itemsContainer.innerHTML = '';
+            if(pending.items && Array.isArray(pending.items)){
+                pending.items.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'd-flex justify-content-between small py-2 border-bottom border-secondary-subtle';
+                    div.innerHTML = `<span class="text-light">${item.name} x${item.quantity || 1}</span><span class="fw-bold">${formatCurrency(item.price * (item.quantity || 1))}</span>`;
+                    itemsContainer.appendChild(div);
+                });
+            }
+            // Renderizar totales
+            const subtotal = pending.subtotal || 0;
+            const discount = pending.discount || 0;
+            const deliveryFee = pending.deliveryFee || 0;
+            const finalTotal = pending.finalTotal || Math.max(0, subtotal - discount + deliveryFee);
+            
+            const totalsDiv = document.querySelector('.order-total');
+            if(totalsDiv){
+                totalsDiv.innerHTML = `
+                    <div class="d-flex justify-content-between small text-secondary">
+                        <span>Subtotal</span>
+                        <span>${formatCurrency(subtotal)}</span>
+                    </div>
+                    ${discount > 0 ? `<div class="d-flex justify-content-between small text-secondary"><span>Descuento</span><span>-${formatCurrency(discount)}</span></div>` : ''}
+                    ${deliveryFee > 0 ? `<div class="d-flex justify-content-between small text-secondary"><span>Envío</span><span>${formatCurrency(deliveryFee)}</span></div>` : ''}
+                    <div class="d-flex justify-content-between pt-3 align-items-center">
+                        <span class="fs-5 fw-bolder">Total</span>
+                        <span class="fs-3 fw-bolder text-primary">${formatCurrency(finalTotal)}</span>
+                    </div>
+                `;
+            }
+        }catch(e){ console.error('loadOrderSummary error', e); }
+    }
+
+    function setupPaymentMethods() {
+        document.querySelectorAll('.payment-method').forEach(method => {
+            method.addEventListener('click', function() {
+                // Limpiar selección anterior
+                document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
+                document.querySelectorAll('[id$="-details"]').forEach(detail => detail.classList.add('d-none'));
+
+                // Establecer selección actual
+                this.classList.add('selected');
+                selectedPaymentMethod = this.dataset.method;
+                
+                // Mostrar detalles y habilitar botón de completar
+                document.getElementById(`${selectedPaymentMethod}-details`).classList.remove('d-none');
+                document.getElementById('btn-complete-order').disabled = false;
+            });
+        });
+    }
+
+    // Simulación del botón "Completar pedido" para métodos NO-WebPay (Transferencia/Efectivo)
+    function completeOrder() {
+        if (!selectedPaymentMethod) {
+            alert('Selecciona un método de pago.');
+            return;
+        }
+
+        const btn = document.getElementById('btn-complete-order');
+        btn.textContent = 'Procesando...';
+        btn.disabled = true;
+
+        if (selectedPaymentMethod === 'transferencia' || selectedPaymentMethod === 'efectivo') {
+            // Simular éxito para métodos no instantáneos (el pedido queda como 'pendiente de pago')
+            simulatePaymentResult(true);
+            // En un caso real, la redirección sería a la página de confirmación/instrucciones de pago.
+            setTimeout(() => {
+                window.location.href = 'payment-instructions.html';
+            }, 2000);
+        } else if (selectedPaymentMethod === 'webpay') {
+            // Para WebPay, la simulación se maneja en simulateWebpayPayment
+            alert('Por favor, usa el botón "Pagar con WebPay (Simular)" en el formulario de detalles.');
+            btn.textContent = 'Completar pedido';
+            btn.disabled = false;
+        }
+    }
+
+    // Simulación del proceso de pago con WebPay
+    async function simulateWebpayPayment() {
+        const cardNumber = document.getElementById('card-number').value.trim();
+        const btn = document.getElementById('btn-simulate-webpay');
+        btn.textContent = 'Pagando...';
+        btn.disabled = true;
+
+        // Simulación: Si el número de tarjeta contiene '999', falla.
+        const paymentSuccess = !cardNumber.includes('999');
+
+        setTimeout(async () => {
+            if (paymentSuccess) {
+                okModal.show();
+                // Finalizar orden: intentar crear en backend y redirigir al recibo
+                await finalizeOrder('webpay');
+            } else {
+                badModal.show();
+                btn.textContent = 'Pagar con WebPay (Simular)';
+                btn.disabled = false;
+            }
+        }, 1200);
+    }
+
+    // Finalizar orden: leer dh_pending_order, intentar POST /api/orders con token; guardar resultado y redirigir a b09.html
+    async function finalizeOrder(paymentMethod){
+        try{
+            const raw = localStorage.getItem('dh_pending_order');
+            if(!raw){
+                // Nothing to finalize, generate a fallback id
+                const fakeId = 'local-' + Date.now();
+                localStorage.setItem('dh_last_order', JSON.stringify({ _id: fakeId }));
+                window.location.href = 'b09.html?id=' + encodeURIComponent(fakeId);
+                return;
+            }
+            const pending = JSON.parse(raw);
+
+            // Build payload expected by backend
+            const payload = {
+                items: pending.items.map(it => ({ product: it.product || it._id || null, quantity: it.quantity || it.qty || 1 })),
+                couponCode: pending.couponCode || null,
+                delivery: !!pending.delivery,
+                paymentMethod: paymentMethod || 'unknown',
+                shippingAddress: pending.shippingAddress || null,
+                notes: pending.notes || ''
+            };
+
+            // Try to POST to API if we have a token
+            let createdOrder = null;
+            const rawUser = localStorage.getItem('dh_user');
+            const token = rawUser ? JSON.parse(rawUser).token : null;
+            if(token){
+                try{
+                    const res = await fetch('/api/orders', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token }, body: JSON.stringify(payload) });
+                    const text = await res.text();
+                    try{ createdOrder = JSON.parse(text); } catch { createdOrder = { error: text || ('HTTP ' + res.status) }; }
+                }catch(e){ createdOrder = { error: 'Error de red' }; }
+            }
+
+            // If creation succeeded and has _id, use it; otherwise fallback to local simulated id
+            let orderId = null;
+            if(createdOrder && createdOrder._id){
+                orderId = createdOrder._id;
+                // Save last order info for receipt page
+                localStorage.setItem('dh_last_order', JSON.stringify(createdOrder));
+            } else {
+                orderId = 'local-' + Date.now();
+                // Attach some info so receipt can show details
+                const fallback = Object.assign({ _id: orderId, items: pending.items, finalTotal: pending.finalTotal || pending.total || 0, createdAt: new Date().toISOString(), orderStatus: 'pending' }, createdOrder && createdOrder.error ? { note: createdOrder.error } : {});
+                localStorage.setItem('dh_last_order', JSON.stringify(fallback));
+            }
+
+            // Cleanup pending order and cart
+            try{ localStorage.removeItem('dh_pending_order'); localStorage.removeItem('dh_cart'); }catch(e){}
+
+            // Redirect to receipt
+            window.location.href = 'b09.html?id=' + encodeURIComponent(orderId);
+        }catch(e){
+            console.error('finalizeOrder error', e);
+            alert('Error finalizando la orden. Revisa la consola.');
+        }
+    }
+</script>
 </body>
 </html>
-
