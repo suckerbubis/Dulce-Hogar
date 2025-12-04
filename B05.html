@@ -1,140 +1,291 @@
-<!doctype html>
-<html lang="es">
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Dulce Hogar — B-05 Filtros dinámicos</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg:#0b0f16;
-    --grid:#1a2436;
-    --ink:#f4f6fb;
-    --muted:#c7d0e1;
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-    background:
-      linear-gradient(var(--grid) 1px, transparent 1px) 0 0/32px 32px,
-      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/32px 32px,
-      var(--bg);
-    color:var(--ink);
-    min-height:100vh;
-    display:flex; align-items:flex-start; justify-content:center;
-    padding:24px;
-  }
-  .stage{width:980px; min-height:720px; position:relative}
-  .title{position:absolute; left:8px; top:-6px; font-size:22px; font-weight:700}
-
-  /* Panel filtros */
-  .panel{
-    margin-top:36px;
-    border:2px solid var(--ink); border-radius:10px; padding:14px 16px;
-  }
-  .panel h3{
-    margin:0 0 10px; font-size:20px; font-weight:700;
-  }
-  .form-row{
-    display:grid; grid-template-columns: 130px 1fr 130px 1fr; gap:14px; align-items:center;
-  }
-  .label{font-weight:700}
-  .select, .input{
-    height:38px; background:transparent; color:var(--ink);
-    border:2px solid var(--ink); border-radius:8px; padding:0 12px; outline:none;
-    appearance:none;
-  }
-  .select-wrap{position:relative}
-  .select-wrap:after{
-    content:"▾"; position:absolute; right:12px; top:8px; font-size:18px; pointer-events:none;
-  }
-  .actions{margin-top:14px; display:flex; gap:12px}
-  .btn{
-    display:inline-block; padding:9px 14px; border:2px solid var(--ink); border-radius:8px;
-    font-weight:700; cursor:default;
-  }
-
-  /* Filtros activos */
-  .active{
-    margin-top:14px; font-weight:700;
-  }
-  .tag{
-    display:inline-block; margin-left:8px; padding:2px 8px; border:2px solid var(--ink);
-    border-radius:999px; font-weight:700;
-  }
-
-  /* Grid de productos (4 x 4) */
-  .grid{
-    margin-top:16px;
-    display:grid; grid-template-columns: repeat(4, 1fr); gap:16px;
-  }
-  .card{
-    border:2px solid var(--ink); border-radius:10px; padding:10px; height:120px;
-    display:flex; align-items:center; justify-content:center; font-weight:700;
-  }
-
-  /* Contenedor principal */
-  .board{margin-top:40px}
-</style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dulce Hogar — Inicio (Bootstrap 5.3.3)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            background-color: var(--bs-body-bg);
+            padding-top: 5rem; /* Espacio para el navbar fijo simulado */
+        }
+        .hero {
+            padding: 4rem 0;
+            text-align: center;
+            background-color: var(--bs-secondary-bg-subtle);
+            border-radius: 0.5rem;
+            margin-bottom: 3rem;
+        }
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            color: var(--bs-light);
+        }
+        .features {
+            padding: 3rem 0;
+        }
+        .feature-card {
+            text-align: center;
+            padding: 1.5rem;
+            border: 1px solid var(--bs-border-color);
+            border-radius: 0.5rem;
+            height: 100%;
+            background-color: var(--bs-body-bg);
+        }
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .newsletter-cta {
+            margin-top: 4rem;
+            padding: 4rem 0;
+            background-color: var(--bs-primary-bg-subtle);
+            border-radius: 0.5rem;
+            text-align: center;
+        }
+        .subscribe-form {
+            max-width: 500px;
+            margin: 1.5rem auto 0.5rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+        .product-card {
+            border: 1px solid var(--bs-border-color);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 1rem rgba(var(--bs-primary-rgb), 0.25);
+            border-color: var(--bs-primary) !important;
+        }
+    </style>
 </head>
 <body>
-  <div class="stage">
-    <div class="title">B-05 — Filtros</div>
 
-    <div class="board">
-      <!-- Panel superior de filtros -->
-      <section class="panel">
-        <h3>Filtros</h3>
-        <div class="form-row">
-          <div class="label">Categoría:</div>
-          <div class="select-wrap">
-            <select class="select">
-              <option>Pasteles</option>
-              <option>Pan</option>
-              <option>Facturas</option>
-            </select>
-          </div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">🍞 Dulce Hogar</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="index.html">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="catalog.html">Catálogo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="cart.html">Carrito <span class="badge bg-primary rounded-pill" id="cart-count">0</span></a></li>
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Mi Cuenta</a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="login.html" id="login-link">Iniciar Sesión</a></li>
+                            <li><a class="dropdown-item" href="register.html" id="register-link">Registrarse</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="order-tracking.html">Seguir Pedido</a></li>
+                            <li><a class="dropdown-item" href="points-program.html">Mis Puntos</a></li>
+                            <div id="user-menu" class="d-none">
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="profile.html">Mi Perfil</a></li>
+                                <li><button id="logout-btn" class="dropdown-item">Cerrar Sesión</button></li>
+                            </div>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-          <div class="label">Buscar:</div>
-          <input class="input" type="text" value="integral" />
+    <main class="container">
+        <div class="hero">
+            <h1 class="hero-title">Panadería Artesanal Dulce Hogar</h1>
+            <p class="h5 text-secondary mb-4">El sabor de lo hecho con amor, directo a tu puerta</p>
+            <div class="hero-actions d-grid gap-2 d-sm-block">
+                <a href="catalog.html" class="btn btn-primary btn-lg fw-bold me-md-2">Ver Catálogo</a>
+                <a href="register.html" class="btn btn-outline-light btn-lg">Crear Cuenta</a>
+            </div>
         </div>
 
-        <div class="actions">
-          <div class="btn">Aplicar filtros</div>
-          <div class="btn">Limpiar</div>
+        <section class="features">
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+                <div class="col">
+                    <div class="feature-card">
+                        <div class="feature-icon">🚚</div>
+                        <h3 class="h5 fw-bold">Envío Rápido</h3>
+                        <p class="text-secondary small">Recibe tus productos en menos de 45 minutos</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="feature-card">
+                        <div class="feature-icon">🎁</div>
+                        <h3 class="h5 fw-bold">Puntos y Promos</h3>
+                        <p class="text-secondary small">Acumula puntos y disfruta de promociones exclusivas</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="feature-card">
+                        <div class="feature-icon">📱</div>
+                        <h3 class="h5 fw-bold">Seguimiento en Tiempo Real</h3>
+                        <p class="text-secondary small">Controla tu pedido desde la app o web</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="feature-card">
+                        <div class="feature-icon">⭐</div>
+                        <h3 class="h5 fw-bold">Calidad Garantizada</h3>
+                        <p class="text-secondary small">Productos frescos y horneados diariamente</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <hr class="my-5">
+
+        <section class="featured-products">
+            <h2 class="h3 fw-bold text-center mb-4">Productos Destacados</h2>
+            <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4" id="featured-products-container">
+                <div class="col-12 text-center text-secondary" id="loading-featured">Cargando productos...</div>
+                </div>
+            <div class="text-center mt-4">
+                <a href="catalog.html" class="btn btn-outline-primary fw-bold">Ver todos los productos</a>
+            </div>
+        </section>
+        
+        <hr class="my-5">
+
+        <section class="newsletter-cta">
+            <h2 class="h3 fw-bold text-light">¡No te pierdas nuestras ofertas!</h2>
+            <p class="text-secondary mb-4">Suscríbete y recibe promociones exclusivas cada semana</p>
+            <div class="subscribe-form">
+                <input type="email" class="form-control form-control-lg" placeholder="tu@email.com" id="newsletter-email">
+                <button class="btn btn-primary btn-lg fw-bold" id="subscribe-btn">Suscribirme</button>
+            </div>
+            <p class="small text-muted mt-2">Puedes cancelar tu suscripción en cualquier momento</p>
+            <div id="newsletter-message" class="mt-3"></div>
+        </section>
+
+    </main>
+
+    <footer class="footer bg-dark pt-5 pb-3 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <h5 class="fw-bold text-light">Dulce Hogar</h5>
+                    <p class="text-secondary small">Panadería artesanal con entrega a domicilio</p>
+                    <p class="text-secondary small mb-1">📞 +56 9 1234 5678</p>
+                    <p class="text-secondary small">✉️ contacto@dulcehogar.cl</p>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <h5 class="fw-bold text-light">Enlaces Rápidos</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="catalog.html" class="text-secondary text-decoration-none">Catálogo</a></li>
+                        <li><a href="order-tracking.html" class="text-secondary text-decoration-none">Seguir Pedido</a></li>
+                        <li><a href="points-program.html" class="text-secondary text-decoration-none">Programa de Puntos</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <h5 class="fw-bold text-light">Legal</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="terms.html" class="text-secondary text-decoration-none">Términos y Condiciones</a></li>
+                        <li><a href="privacy.html" class="text-secondary text-decoration-none">Política de Privacidad</a></li>
+                        <li><a href="faq.html" class="text-secondary text-decoration-none">Preguntas Frecuentes</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <h5 class="fw-bold text-light">Síguenos</h5>
+                    <div class="d-flex social-links">
+                        <a href="#" class="btn btn-outline-secondary me-2"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="btn btn-outline-secondary me-2"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="btn btn-outline-secondary"><i class="bi bi-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="text-secondary">
+            <div class="text-center">
+                <p class="text-secondary small mb-0">© 2024 Dulce Hogar. Todos los derechos reservados.</p>
+            </div>
         </div>
-      </section>
+    </footer>
 
-      <!-- Filtros activos -->
-      <div class="active">
-        Filtros activos:
-        <span class="tag">Pasteles</span>
-        <span class="tag">“integral”</span>
-      </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFeaturedProducts();
+            document.getElementById('subscribe-btn').addEventListener('click', subscribeNewsletter);
+        });
 
-      <!-- Grilla de productos -->
-      <section class="grid">
-        <div class="card">Producto</div>
-        <div class="card">Producto</div>
-        <div class="card">Producto</div>
-        <div class="card">Producto</div>
+        // Simulación de productos destacados (API Call: GET /api/products/featured)
+        function loadFeaturedProducts() {
+            const container = document.getElementById('featured-products-container');
+            const loading = document.getElementById('loading-featured');
+            
+            // Simulación de carga
+            setTimeout(() => {
+                const featuredItems = [
+                    { name: "Pan de Campo", category: "Pan", price: "$3.500" },
+                    { name: "Medialunas (6u)", category: "Facturas", price: "$2.800" },
+                    { name: "Torta de Mil Hojas", category: "Pasteles", price: "$12.000" },
+                    { name: "Bagel Integral", category: "Pan", price: "$1.200" }
+                ];
 
-        <div class="card">Producto</div>
-        <div class="card">Producto</div>
-        <div class="card">Producto</div>
-        <div class="card">Producto</div>
+                container.innerHTML = ''; // Limpiar "Cargando..."
 
-        <div class="card">Producto</div>
-        <div class="card">Producto</div>
-        <div class="card">Producto</div>
-        <div class="card">Producto</div>
+                featuredItems.forEach(item => {
+                    const html = `
+                        <div class="col">
+                            <div class="card product-card h-100 shadow">
+                                <div class="card-img-top bg-secondary text-center p-4">
+                                    <i class="bi bi-gift h2"></i>
+                                </div>
+                                <div class="card-body">
+                                    <p class="small text-muted mb-1 text-uppercase">${item.category}</p>
+                                    <h5 class="card-title fw-bold">${item.name}</h5>
+                                    <p class="card-text text-primary fw-bolder fs-5">${item.price}</p>
+                                    <a href="catalog.html" class="btn btn-sm btn-outline-primary w-100">Ver Producto</a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.insertAdjacentHTML('beforeend', html);
+                });
+            }, 1500); // Latencia simulada
+        }
 
-        <div class="card">Producto</div>
-        <div class="card">Producto</div>
-        <div class="card">Producto</div>
-        <div class="card">Producto</div>
-      </section>
-    </div>
-  </div>
+        // Simulación de suscripción al Newsletter (API Call: POST /api/newsletter/subscribe)
+        function subscribeNewsletter() {
+            const emailInput = document.getElementById('newsletter-email');
+            const btn = document.getElementById('subscribe-btn');
+            const messageDiv = document.getElementById('newsletter-message');
+            const email = emailInput.value;
+
+            messageDiv.innerHTML = '';
+            
+            if (!email || !email.includes('@')) {
+                messageDiv.innerHTML = '<div class="alert alert-danger small">Por favor, introduce un email válido.</div>';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Procesando...';
+
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.textContent = 'Suscribirme';
+                
+                if (email.toLowerCase().includes('fail')) {
+                    // Simulación de email ya registrado o error
+                    messageDiv.innerHTML = '<div class="alert alert-danger small">Error: Ya existe una suscripción con este correo.</div>';
+                } else {
+                    // Simulación de éxito
+                    messageDiv.innerHTML = '<div class="alert alert-success small">¡Gracias por suscribirte! Revisa tu bandeja de entrada.</div>';
+                    emailInput.value = '';
+                }
+            }, 1000);
+        }
+    </script>
 </body>
 </html>
