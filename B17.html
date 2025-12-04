@@ -1,69 +1,130 @@
-<!doctype html>
-<html lang="es">
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Dulce Hogar — B-17 Confirmación automática</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg:#0b0f16;     /* pizarra */
-    --grid:#1a2436;   /* grilla */
-    --ink:#f4f6fb;    /* tiza */
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-    background:
-      linear-gradient(var(--grid) 1px, transparent 1px) 0 0/32px 32px,
-      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/32px 32px,
-      var(--bg);
-    color:var(--ink);
-    min-height:100vh; display:flex; justify-content:center; align-items:flex-start; padding:28px;
-  }
-  .stage{position:relative; width:1120px; min-height:560px;}
-  .title{
-    position:absolute; left:16px; top:0; right:16px;
-    font-size:28px; font-weight:800; line-height:1.3;
-  }
-
-  .panel{
-    position:absolute; top:120px; border:2px solid var(--ink); border-radius:12px;
-    background:transparent; color:var(--ink); padding:16px 18px;
-  }
-  .email{left:40px; width:600px; height:300px}
-  .sms{right:40px; width:300px; height:300px}
-
-  .hdr{
-    border-bottom:2px solid var(--ink); padding-bottom:8px; margin-bottom:12px;
-    font-weight:900; font-size:20px;
-  }
-  .row{margin:10px 0; font-weight:800}
-  .bullets{margin:8px 0 0 0; padding-left:18px; font-weight:800}
-</style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dulce Hogar — Pedido Confirmado (Bootstrap 5.3.3)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            background-color: var(--bs-body-bg);
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+        .confirmation-card {
+            background-color: var(--bs-secondary-bg-subtle);
+            border: 2px solid var(--bs-success);
+            border-radius: 0.75rem;
+            padding: 2.5rem;
+        }
+        .order-number-badge {
+            background-color: rgba(var(--bs-success-rgb), 0.1);
+            border: 1px solid var(--bs-success);
+            font-size: 1.25rem;
+            font-weight: 800;
+        }
+        .notification-box {
+            background-color: var(--bs-dark);
+            border: 1px solid var(--bs-info);
+            border-radius: 0.5rem;
+        }
+    </style>
 </head>
 <body>
-  <div class="stage">
-    <div class="title">Tras un pago aprobado, se envía automáticamente la confirmación</div>
 
-    <!-- “Email” de confirmación -->
-    <section class="panel email">
-      <div class="hdr">Confirmación de pedido — Dulce Hogar</div>
-      <div class="row"><b>N° 2854</b></div>
-      <ul class="bullets">
-        <li>Pan, 6 facturas</li>
-        <li>Monto: $ 18.000</li>
-      </ul>
-      <div class="row" style="margin-top:24px">Hora estimada</div>
-    </section>
+<main class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="confirmation-card text-center">
+                <div class="text-success mb-3">
+                    <i class="bi bi-check-circle-fill display-3"></i>
+                </div>
+                <h1 class="text-light fw-bolder mb-2">¡Pedido Confirmado!</h1>
+                <p class="text-secondary subtitle mb-4">Gracias por tu compra. Tu pedido está siendo procesado y las notificaciones han sido enviadas.</p>
+                
+                <div class="order-number-badge text-success d-inline-block px-3 py-2 mb-4">Pedido #2854</div>
+                
+                <div class="notification-box p-4 mb-4 text-start">
+                    <h3 class="text-info fs-6 fw-bold mb-3"><i class="bi bi-envelope-fill me-1"></i> Confirmación enviada por múltiples canales</h3>
+                    
+                    <div class="row text-center">
+                        <div class="col-4">
+                            <div class="text-success fs-4 mb-1">📧</div>
+                            <div class="small fw-bold">Email</div>
+                        </div>
+                        <div class="col-4">
+                            <div class="text-success fs-4 mb-1">💬</div>
+                            <div class="small fw-bold">SMS</div>
+                        </div>
+                        <div class="col-4">
+                            <div class="text-success fs-4 mb-1">📱</div>
+                            <div class="small fw-bold">App Push</div>
+                        </div>
+                    </div>
+                </div>
 
-    <!-- “SMS” corto -->
-    <section class="panel sms">
-      <div class="row"><b>N° 2854</b></div>
-      <div class="row">Confirmado.</div>
-      <div class="row">Est. hora:</div>
-      <div class="row" style="font-size:22px; font-weight:900">15:30</div>
-    </section>
-  </div>
+                <div class="row g-4 text-start">
+                    <div class="col-md-6">
+                        <div class="p-3 bg-dark rounded border border-secondary-subtle">
+                            <h4 class="fs-6 fw-bold text-muted mb-3 pb-2 border-bottom border-secondary-subtle">📦 Resumen del pedido</h4>
+                            <p class="mb-1 small">**Pan integral × 1**</p>
+                            <p class="mb-1 small">**Facturas × 6**</p>
+                            <p class="fw-bold mt-3 border-top border-secondary-subtle pt-2">Total: $18.000</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="p-3 bg-dark rounded border border-secondary-subtle">
+                            <h4 class="fs-6 fw-bold text-muted mb-3 pb-2 border-bottom border-secondary-subtle">🚚 Información de entrega</h4>
+                            <p class="mb-1 small">**Hora estimada:** <span class="fw-bold text-warning">15:30</span></p>
+                            <p class="mb-1 small">**Dirección:** Av. Principal 1234</p>
+                            <p class="mb-1 small">**Método de pago:** WebPay</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-3 bg-secondary rounded border border-secondary-subtle mt-4 mx-auto" style="max-width: 300px;">
+                    <h5 class="text-light small fw-bold mb-2"><i class="bi bi-chat-dots-fill me-1"></i> Vista previa SMS</h5>
+                    <div class="small text-start">
+                        <p class="mb-1">Pedido 2854 Confirmado.</p>
+                        <p class="mb-0">Est. hora: <span class="fw-bolder">15:30</span></p>
+                    </div>
+                </div>
+                
+                <div class="d-grid gap-2 d-md-flex justify-content-center mt-4">
+                    <a href="order-tracking.html?order=2854" class="btn btn-primary btn-lg fw-bold">
+                        <i class="bi bi-truck me-1"></i> Seguir mi pedido
+                    </a>
+                    <a href="catalog.html" class="btn btn-outline-light btn-lg fw-bold">
+                        <i class="bi bi-basket me-1"></i> Seguir comprando
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script>
+    // Simulación de la función para mostrar notificaciones (Toast)
+    function showToast(message, type = 'info') {
+        console.log(`[Toast ${type.toUpperCase()}]: ${message}`);
+    }
+
+    // Simular envío automático de confirmación
+    document.addEventListener('DOMContentLoaded', function() {
+        // Esta lógica simula el proceso que ocurre en el backend después del pago.
+        console.log('Simulación: Confirmación automática de pedido #2854 disparada.');
+        console.log('API Call: POST /api/notifications/send (Tipo: confirmation)');
+        console.log('Resultado: Email, SMS y Push enviados con éxito.');
+        
+        showToast('Confirmación automática de pedido enviada.', 'success');
+    });
+</script>
 </body>
 </html>
