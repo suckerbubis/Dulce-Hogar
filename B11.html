@@ -1,139 +1,319 @@
-<!doctype html>
-<html lang="es">
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Dulce Hogar — B-11 Seguimiento de pedido</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg:#0b0f16;
-    --grid:#1a2436;
-    --ink:#f4f6fb;
-    --muted:#c7d0e1;
-    --red:#ef4444;
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-    background:
-      linear-gradient(var(--grid) 1px, transparent 1px) 0 0/32px 32px,
-      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/32px 32px,
-      var(--bg);
-    color:var(--ink);
-    min-height:100vh;
-    display:flex; justify-content:center; align-items:flex-start; padding:28px;
-  }
-  .stage{position:relative; width:980px; height:700px;}
-  .title{position:absolute; left:8px; top:-6px; font-size:22px; font-weight:700}
-
-  .box{
-    position:absolute; border:2px solid var(--ink); border-radius:10px;
-    background:transparent; color:var(--ink); padding:12px 14px;
-  }
-  .hdr{
-    border-bottom:2px solid var(--ink);
-    padding-bottom:8px; margin-bottom:10px; font-weight:700;
-  }
-  .btn{
-    display:inline-block; margin-top:10px; padding:8px 14px;
-    border:2px solid var(--ink); border-radius:999px; font-weight:700;
-  }
-
-  /* Panel superior izq: Seguimiento */
-  #track{left:60px; top:70px; width:340px}
-  #track .kv{margin:6px 0; font-weight:700}
-
-  /* Modal: Estado actualizado */
-  #modal{left:520px; top:90px; width:320px; text-align:center}
-  .ok{display:inline-block; margin-top:10px; padding:6px 12px; border:2px solid var(--ink); border-radius:6px; font-weight:700}
-
-  /* API box */
-  #api{
-    left:60px; bottom:70px; width:300px; font-weight:700;
-  }
-  #api pre{
-    margin:8px 0 0; background:transparent; color:var(--ink); font-family:monospace; white-space:pre-line;
-  }
-
-  /* Timeline del pedido */
-  #timeline{
-    left:360px; top:360px; width:560px; padding:14px;
-  }
-  .status-row{
-    display:flex; justify-content:space-between; align-items:center; margin-top:14px;
-  }
-  .line{
-    position:relative; height:2px; background:var(--ink); margin:24px 0 8px;
-  }
-  .dot{
-    position:absolute; top:-6px; width:14px; height:14px; border:2px solid var(--ink);
-    border-radius:50%; background:transparent;
-  }
-  .dot:nth-child(1){left:6%}
-  .dot:nth-child(2){left:48%}
-  .dot:nth-child(3){left:90%}
-
-  /* Flechas rojas */
-  svg.lines{position:absolute; inset:0; pointer-events:none}
-  .arrow{stroke:var(--red); stroke-width:3; fill:none; marker-end:url(#ah)}
-</style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dulce Hogar — Seguimiento de Pedido (Bootstrap 5.3.3)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            background-color: var(--bs-body-bg);
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+        .tracking-card {
+            background-color: var(--bs-secondary-bg-subtle);
+            border: 1px solid var(--bs-border-color);
+            border-radius: 0.75rem;
+            padding: 2rem;
+        }
+        .search-form {
+            background-color: var(--bs-secondary-bg);
+            border: 1px solid var(--bs-border-color);
+            border-radius: 0.75rem;
+            padding: 2rem;
+        }
+        /* Timeline Styling */
+        .timeline-container {
+            position: relative;
+            padding: 0 0 0 2rem; /* Espacio a la izquierda para la línea */
+        }
+        .timeline-line {
+            position: absolute;
+            left: 17px; /* Alinear con los íconos */
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: var(--bs-border-color);
+        }
+        .timeline-step {
+            position: relative;
+            padding-left: 40px;
+            margin-bottom: 2rem;
+        }
+        .timeline-icon {
+            position: absolute;
+            left: 0;
+            width: 36px;
+            height: 36px;
+            border: 2px solid var(--bs-border-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            z-index: 1;
+            background-color: var(--bs-body-bg);
+        }
+        .timeline-step.completed .timeline-icon {
+            background-color: var(--bs-success);
+            border-color: var(--bs-success);
+            color: white;
+        }
+        .timeline-step.current .timeline-icon {
+            background-color: var(--bs-primary);
+            border-color: var(--bs-primary);
+            color: white;
+            box-shadow: 0 0 0 0 rgba(var(--bs-primary-rgb), 0.4);
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(var(--bs-primary-rgb), 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(var(--bs-primary-rgb), 0); }
+            100% { box-shadow: 0 0 0 0 rgba(var(--bs-primary-rgb), 0); }
+        }
+        .delivery-estimation {
+            background-color: rgba(var(--bs-info-rgb), 0.1);
+            border: 1px solid var(--bs-info);
+        }
+        .item-image-placeholder {
+            width: 60px;
+            height: 60px;
+            background-color: var(--bs-secondary);
+            border-radius: 0.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
 </head>
 <body>
-  <div class="stage">
-    <div class="title">B-11</div>
 
-    <!-- Seguimiento -->
-    <div class="box" id="track">
-      <div class="hdr">Seguimiento de pedido</div>
-      <div class="kv">Número: <b>123456</b></div>
-      <div class="kv">En preparación</div>
-      <div class="btn">Ver pedido</div>
+<main class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="text-center mb-5">
+                <h1 class="text-light fw-bolder">Seguimiento de Pedido</h1>
+                <p class="text-secondary">Consulta el estado actual de tu entrega en tiempo real.</p>
+            </div>
+
+            <div class="search-form mx-auto mb-4" id="search-form" style="max-width: 600px;">
+                <h2 class="fs-4 fw-bolder mb-3">Buscar pedido</h2>
+                <div class="input-group">
+                    <input type="text" class="form-control form-control-lg" id="order-search" placeholder="Ej: DH12345678">
+                    <button class="btn btn-primary btn-lg fw-bold" onclick="searchOrder()" id="btn-search">
+                        <i class="bi bi-search me-1"></i> Buscar
+                    </button>
+                </div>
+                <p class="text-muted small mt-2 mb-0">
+                    Ingresa el número que recibiste en tu email. <a href="login.html" class="text-primary text-decoration-none">Inicia sesión</a> para ver tu historial.
+                </p>
+            </div>
+
+            <div class="tracking-container mx-auto" id="tracking-result" style="display: none;">
+                <div class="tracking-card">
+                    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary-subtle">
+                        <div class="order-number fs-4 fw-bolder" id="order-number-display">Pedido #DH12345678</div>
+                        <div class="badge bg-primary fs-6 fw-bold" id="order-status-display">En preparación</div>
+                    </div>
+                    
+                    <div class="row g-3 small mb-4 text-secondary">
+                        <div class="col-md-6"><span class="text-muted d-block">Fecha:</span> 15 Mayo 2024, 14:30</div>
+                        <div class="col-md-6"><span class="text-muted d-block">Total:</span> <span class="fw-bold text-primary">$4.700</span></div>
+                        <div class="col-12"><span class="text-muted d-block">Entrega:</span> Av. Principal 1234, Santiago</div>
+                    </div>
+                    
+                    <div class="timeline-container">
+                        <div class="timeline-line"></div>
+                        
+                        <div class="timeline-step completed" id="step-confirm">
+                            <div class="timeline-icon">✓</div>
+                            <div class="timeline-content">
+                                <div class="fw-bold">Pedido confirmado</div>
+                                <div class="text-secondary small">Tu pedido ha sido recibido y pagado (14:32)</div>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-step current" id="step-prepare">
+                            <div class="timeline-icon"><i class="bi bi-gear-fill"></i></div>
+                            <div class="timeline-content">
+                                <div class="fw-bold text-primary">En preparación</div>
+                                <div class="text-secondary small">Nuestros panaderos están horneando tu pedido (Actual)</div>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-step" id="step-onway">
+                            <div class="timeline-icon"><i class="bi bi-truck"></i></div>
+                            <div class="timeline-content">
+                                <div class="fw-bold">En camino</div>
+                                <div class="text-secondary small">Tu pedido ha salido a reparto.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-step" id="step-delivered">
+                            <div class="timeline-icon"><i class="bi bi-house-door"></i></div>
+                            <div class="timeline-content">
+                                <div class="fw-bold">Entregado</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="delivery-estimation p-3 rounded-3 mt-4">
+                        <div class="text-info fw-bold mb-1">Entrega estimada</div>
+                        <div class="fs-5 fw-bolder">15:30 - 16:00 (45-60 minutos)</div>
+                        <div class="small text-secondary mt-2 border-top border-info-subtle pt-2">
+                            <strong>Repartidor asignado:</strong> Juan Pérez (+56 9 8765 4321)
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex gap-2 flex-wrap mt-4">
+                        <button class="btn btn-outline-light d-flex align-items-center" onclick="contactSupport()">
+                            <i class="bi bi-whatsapp me-1"></i> Contactar soporte
+                        </button>
+                        <button class="btn btn-outline-light d-flex align-items-center" onclick="downloadInvoice()">
+                            <i class="bi bi-file-earmark-text-fill me-1"></i> Descargar factura
+                        </button>
+                        <button class="btn btn-primary d-flex align-items-center" onclick="reorder()">
+                            <i class="bi bi-arrow-repeat me-1"></i> Volver a pedir
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+</main>
 
-    <!-- Modal de actualización -->
-    <div class="box" id="modal">
-      <div class="hdr">Estado actualizado a</div>
-      <div>“En preparación”</div>
-      <div class="ok">OK</div>
-    </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script>
+    const orderSteps = {
+        'confirm': 'Pedido confirmado',
+        'paid': 'Pago aprobado',
+        'prepare': 'En preparación',
+        'onway': 'En camino',
+        'delivered': 'Entregado'
+    };
+    let currentOrderId = null;
+    let refreshInterval;
+    
+    // --- Lógica de la UI y API (Simulada) ---
+    
+    // Simulación de la función para mostrar notificaciones (Toast)
+    function showToast(message, type = 'info') {
+        console.log(`[Toast ${type.toUpperCase()}]: ${message}`);
+    }
 
-    <!-- API -->
-    <div class="box" id="api">
-      <div class="hdr">API::Pedido</div>
-      <pre>+ id : string
-- estado : string
-- respuesta</pre>
-    </div>
+    function searchOrder() {
+        const orderNumber = document.getElementById('order-search').value.trim();
+        
+        if (!orderNumber || !orderNumber.startsWith('DH')) {
+            showToast('Ingresa un número de pedido válido (Ej: DH...)', 'warning');
+            return;
+        }
+        
+        // Simular búsqueda y carga de datos
+        document.getElementById('search-form').style.display = 'none';
+        document.getElementById('tracking-result').style.display = 'block';
+        currentOrderId = orderNumber;
 
-    <!-- Timeline -->
-    <div class="box" id="timeline">
-      <div class="hdr">Pedido #123456</div>
-      <div class="status-row">
-        <span>En preparación</span>
-        <span>En camino</span>
-      </div>
-      <div class="line">
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-      </div>
-      <div style="text-align:center; margin-top:4px;">Entregado</div>
-    </div>
+        document.getElementById('order-number-display').textContent = `Pedido #${orderNumber}`;
+        showToast(`Buscando pedido ${orderNumber}...`, 'info');
+        
+        // Cargar estado inicial y empezar auto-refresh
+        updateOrderStatus('prepare');
+        startAutoRefresh();
+    }
+    
+    function updateOrderStatus(newStatus) {
+        const statusDisplay = document.getElementById('order-status-display');
+        statusDisplay.textContent = orderSteps[newStatus] || 'Desconocido';
+        
+        // Actualizar Timeline
+        document.querySelectorAll('.timeline-step').forEach(step => step.classList.remove('completed', 'current'));
+        
+        let foundCurrent = false;
+        
+        for (const key in orderSteps) {
+            const stepId = `step-${key}`;
+            const stepEl = document.getElementById(stepId);
 
-    <!-- Conexiones -->
-    <svg class="lines" viewBox="0 0 980 700" preserveAspectRatio="none">
-      <defs>
-        <marker id="ah" markerWidth="12" markerHeight="8" refX="10" refY="4" orient="auto">
-          <polygon points="0,0 12,4 0,8" fill="#ef4444"/>
-        </marker>
-      </defs>
-      <!-- Seguimiento -> Modal -->
-      <path class="arrow" d="M 400 120 C 430 120, 460 120, 520 120"/>
-      <!-- Modal -> Timeline -->
-      <path class="arrow" d="M 680 200 C 640 260, 560 300, 520 360"/>
-    </svg>
-  </div>
+            if (stepEl) {
+                if (!foundCurrent) {
+                    stepEl.classList.add('completed');
+                }
+                
+                if (key === newStatus) {
+                    stepEl.classList.remove('completed');
+                    stepEl.classList.add('current');
+                    foundCurrent = true;
+                    statusDisplay.className = `badge bg-${newStatus === 'delivered' ? 'success' : 'primary'} fs-6 fw-bold`;
+                    break;
+                }
+            }
+        }
+    }
+    
+    // Simulación de la función para reordenar (API Call: POST /api/cart/reorder)
+    function reorder() {
+        showToast('Añadiendo productos al carrito...', 'info');
+        // Simulación
+        setTimeout(() => {
+            showToast('Productos añadidos al carrito', 'success');
+            // Redirigir
+            setTimeout(() => { window.location.href = 'cart.html'; }, 1000);
+        }, 1500);
+    }
+    
+    // Simulación de la función de contactar soporte
+    function contactSupport() {
+        const phone = '+56912345678';
+        const message = `Hola, necesito ayuda con mi pedido #${currentOrderId}`;
+        window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+    }
+    
+    // Simulación de la función de descargar factura (API Call: GET /api/orders/{orderId}/invoice)
+    function downloadInvoice() {
+        showToast('Descargando factura...', 'info');
+        setTimeout(() => { showToast('Factura descargada exitosamente (Simulado)', 'success'); }, 1500);
+    }
+    
+    // Auto-refresh cada 30 segundos si hay un pedido en seguimiento
+    function startAutoRefresh() {
+        if (refreshInterval) clearInterval(refreshInterval);
+
+        // Simula el cambio de estado de preparación a en camino
+        if (currentOrderId && document.getElementById('tracking-result').style.display !== 'none') {
+            let refreshCount = 0;
+            refreshInterval = setInterval(() => {
+                refreshCount++;
+                console.log(`Actualizando estado del pedido, intento ${refreshCount}...`);
+                
+                // Simulación de avance de estado
+                if (refreshCount === 2) {
+                    updateOrderStatus('onway');
+                    showToast('¡Tu pedido ya salió a reparto!', 'primary');
+                } else if (refreshCount === 4) {
+                    updateOrderStatus('delivered');
+                    showToast('¡Tu pedido fue entregado!', 'success');
+                    clearInterval(refreshInterval);
+                }
+            }, 5000); // 5 segundos para la demo
+        }
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // Verificar si hay un número de pedido en la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderParam = urlParams.get('order');
+        
+        if (orderParam) {
+            document.getElementById('order-search').value = orderParam;
+            searchOrder();
+        }
+    });
+</script>
 </body>
 </html>
-
