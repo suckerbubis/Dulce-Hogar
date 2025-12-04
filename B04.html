@@ -1,143 +1,273 @@
-<!doctype html>
-<html lang="es">
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Dulce Hogar — B-04 Catálogo</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg:#0b0f16;
-    --grid:#1a2436;
-    --ink:#e9edf5;
-    --muted:#b8c2d3;
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-    background:
-      linear-gradient(var(--grid) 1px, transparent 1px) 0 0/32px 32px,
-      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/32px 32px,
-      var(--bg);
-    color:var(--ink);
-    min-height:100vh;
-    display:flex; align-items:flex-start; justify-content:center;
-    padding:24px;
-  }
-  .stage{
-    width:1100px; min-height:640px; position:relative;
-  }
-  .chalk{
-    border:2px solid var(--ink); border-radius:10px; background:transparent;
-    color:var(--ink); padding:10px 12px;
-    box-shadow:0 0 0 2px transparent inset;
-  }
-  .title{
-    position:absolute; left:12px; top:-6px; font-size:20px; font-weight:700;
-  }
-
-  /* Barra de búsqueda + acciones */
-  .searchbar{ display:grid; grid-template-columns: 1fr 160px 150px 120px; gap:12px; }
-  .searchbar input{
-    height:36px; background:transparent; color:var(--ink); border:2px solid var(--ink);
-    border-radius:8px; padding:0 10px; outline:none;
-  }
-  .btn{
-    display:inline-block; text-align:center; padding:8px 10px; border:2px solid var(--ink);
-    border-radius:8px; font-weight:700; cursor:default;
-  }
-
-  /* Grid de productos */
-  .grid{
-    margin-top:16px; display:grid; grid-template-columns: repeat(3, 1fr); gap:18px;
-  }
-  .col{ border:2px solid var(--ink); border-radius:10px; padding:12px; }
-  .product{
-    border:2px solid var(--ink); border-radius:10px; padding:8px; margin-bottom:12px;
-    height:88px; display:flex; align-items:center; justify-content:center;
-  }
-  .price{ text-align:center; font-weight:700; margin-top:6px; }
-
-  /* Estado vacío */
-  .empty{
-    border:2px solid var(--ink); border-radius:10px; padding:10px; min-height:88px;
-    display:flex; align-items:center; justify-content:center; text-align:center;
-    font-weight:700;
-  }
-
-  /* Paginación */
-  .pager{
-    display:flex; align-items:center; gap:10px; margin-top:14px;
-  }
-  .chip{
-    min-width:34px; text-align:center; padding:6px 10px; border:2px solid var(--ink);
-    border-radius:8px; font-weight:700;
-  }
-  .count{ margin-left:auto; font-size:14px; color:var(--muted); }
-
-  /* Encabezados de columnas (Búsqueda / Aplicar filtros / Limpiar) */
-  .col .head{
-    display:block; margin:-8px auto 10px; padding:4px 10px; width:max-content;
-    border:2px solid var(--ink); border-radius:8px; font-weight:700;
-  }
-
-  /* Layout general */
-  .board{ margin-top:40px; }
-</style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dulce Hogar — Catálogo (Bootstrap 5.3.3)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            background-color: var(--bs-body-bg);
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+        .catalog-filters {
+            background-color: var(--bs-secondary-bg-subtle);
+            border: 1px solid var(--bs-border-color);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .filter-btn-group .btn {
+            white-space: nowrap; /* Evita que los botones se rompan en varias líneas */
+        }
+        .product-image-placeholder {
+            height: 150px;
+            background-color: var(--bs-secondary);
+            border-bottom: 1px solid var(--bs-border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        .product-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+            background-color: var(--bs-tertiary-bg);
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 1rem rgba(var(--bs-primary-rgb), 0.25);
+            border-color: var(--bs-primary) !important;
+        }
+    </style>
 </head>
 <body>
-  <div class="stage">
-    <div class="title">B-04 — Catálogo</div>
 
-    <!-- Barra superior: búsqueda + acciones -->
-    <div class="board chalk">
-      <div class="searchbar">
-        <input type="text" placeholder="Buscar…">
-        <div class="btn">Búsqueda</div>
-        <div class="btn">Aplicar filtros</div>
-        <div class="btn">Limpiar</div>
-      </div>
+<main class="container">
+    <h1 class="text-light fw-bold mb-1">Catálogo Dulce Hogar</h1>
+    <p class="text-secondary mb-4">Explora nuestra pastelería y panadería artesanal.</p>
 
-      <!-- Grid de 3 columnas con 4 filas (12 productos) -->
-      <div class="grid">
-        <!-- Columna 1 -->
-        <div class="col">
-          <span class="head">Búsqueda</span>
-          <div class="product">□</div><div class="price">$0.00</div>
-          <div class="product">□</div><div class="price">$0.00</div>
-          <div class="product">□</div><div class="price">$0.00</div>
-          <div class="product">□</div><div class="price">$0.00</div>
+    <div class="catalog-filters">
+        <div class="input-group mb-3">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input type="text" class="form-control" placeholder="Buscar productos..." id="search-input">
+            <button class="btn btn-outline-danger" type="button" id="clear-search-btn"><i class="bi bi-x-lg"></i> Limpiar</button>
+        </div>
+        
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label text-secondary fw-bold">Categorías:</label>
+                <div class="btn-group filter-btn-group w-100" role="group" id="category-filters">
+                    <input type="radio" class="btn-check" name="category" id="cat-all" value="" autocomplete="off" checked>
+                    <label class="btn btn-outline-primary" for="cat-all">Todos</label>
+                    <input type="radio" class="btn-check" name="category" id="cat-pan" value="pan" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="cat-pan">Pan</label>
+                    <input type="radio" class="btn-check" name="category" id="cat-pasteles" value="pasteles" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="cat-pasteles">Pasteles</label>
+                    <input type="radio" class="btn-check" name="category" id="cat-facturas" value="facturas" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="cat-facturas">Facturas</label>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <label for="sort-select" class="form-label text-secondary fw-bold">Ordenar por:</label>
+                <select class="form-select" id="sort-select">
+                    <option value="name">Nombre A-Z</option>
+                    <option value="price-asc">Precio: Menor a mayor</option>
+                    <option value="price-desc">Precio: Mayor a menor</option>
+                    <option value="newest">Más nuevos primero</option>
+                </select>
+            </div>
         </div>
 
-        <!-- Columna 2 -->
-        <div class="col">
-          <span class="head">Aplicar filtros</span>
-          <div class="product">□</div><div class="price">$0.00</div>
-          <div class="product">□</div><div class="price">$0.00</div>
-          <div class="product">□</div><div class="price">$0.00</div>
-          <div class="product">□</div><div class="price">$0.00</div>
-        </div>
-
-        <!-- Columna 3 con estado vacío a la derecha -->
-        <div class="col">
-          <span class="head">Limpiar</span>
-          <div class="empty">No hay productos disponibles</div>
-          <div class="product">□</div><div class="price">$0.00</div>
-          <div class="product">□</div><div class="price">$0.00</div>
-          <div class="product">□</div><div class="price">$0.00</div>
-        </div>
-      </div>
-
-      <!-- Paginación -->
-      <div class="pager">
-        <div class="chip">&lt;</div>
-        <div class="chip">1</div>
-        <div class="chip">2</div>
-        <div class="chip">3</div>
-        <div class="chip">▶</div>
-        <div class="count">12 de 30 productos</div>
-      </div>
     </div>
-  </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="h4 fw-bold mb-0">Resultados</h2>
+        <span class="products-count text-secondary fw-bold" id="products-count">12 de 30 productos</span>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="products-container">
+        <div class="col">
+            <div class="card product-card h-100 border-primary">
+                <div class="product-image-placeholder"><i class="bi bi-box"></i></div>
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">Pan de Masa Madre</h5>
+                    <p class="card-text text-secondary small">Categoría: Pan</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="current-price text-primary fw-bolder">$4.500</span>
+                        <button class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i> Ver</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card product-card h-100">
+                <div class="product-image-placeholder">□</div>
+                <div class="card-body">...</div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card product-card h-100">
+                <div class="product-image-placeholder">□</div>
+                <div class="card-body">...</div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card product-card h-100">
+                <div class="product-image-placeholder">□</div>
+                <div class="card-body">...</div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card product-card h-100">
+                <div class="product-image-placeholder">□</div>
+                <div class="card-body">...</div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card product-card h-100">
+                <div class="product-image-placeholder">□</div>
+                <div class="card-body">...</div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card product-card h-100">
+                <div class="product-image-placeholder">□</div>
+                <div class="card-body">...</div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card product-card h-100">
+                <div class="product-image-placeholder">□</div>
+                <div class="card-body">...</div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card product-card h-100">
+                <div class="product-image-placeholder">□</div>
+                <div class="card-body">...</div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card product-card h-100">
+                <div class="product-image-placeholder">□</div>
+                <div class="card-body">...</div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card product-card h-100">
+                <div class="product-image-placeholder">□</div>
+                <div class="card-body">...</div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card product-card h-100">
+                <div class="product-image-placeholder">□</div>
+                <div class="card-body">...</div>
+            </div>
+        </div>
+        </div>
+
+    <div class="d-flex justify-content-center mt-5">
+        <nav aria-label="Navegación del catálogo">
+            <ul class="pagination" id="pagination">
+                <li class="page-item disabled"><a class="page-link" href="#">Anterior</a></li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">Siguiente</a></li>
+            </ul>
+        </nav>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script>
+    // Objeto para rastrear filtros (simula el estado de la aplicación)
+    let currentFilters = {
+        search: '',
+        category: '',
+        sort: 'name',
+        page: 1
+        // minPrice, maxPrice pueden agregarse si se implementa el filtro de precio
+    };
+    
+    // Función de retardo (debounce) para la búsqueda (tomada de B04 god.html)
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    // Función principal que simula la llamada al API y actualiza la UI
+    function applyFilters() {
+        console.log('Filtros aplicados:', currentFilters);
+        // Aquí se simularía la llamada a la API con los parámetros en currentFilters
+        // Por ejemplo: fetch(`/api/products?search=${currentFilters.search}&...`)
+        
+        // Simulación: Actualizar contador
+        const totalProducts = Math.floor(Math.random() * 100) + 20; // 20 a 120
+        const displayedCount = Math.min(12, totalProducts);
+        document.getElementById('products-count').textContent = 
+            `${displayedCount} de ${totalProducts} productos`;
+        
+        // Simulación: Actualizar la interfaz con los nuevos resultados...
+    }
+
+    // Configuración de los listeners de la UI
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('search-input');
+        const sortSelect = document.getElementById('sort-select');
+        const clearSearchBtn = document.getElementById('clear-search-btn');
+
+        // Búsqueda (debounced)
+        const debouncedSearch = debounce(function() {
+            currentFilters.search = searchInput.value;
+            currentFilters.page = 1; // Volver a la página 1 al buscar
+            applyFilters();
+        }, 500);
+        searchInput.addEventListener('input', debouncedSearch);
+
+        // Limpiar Búsqueda
+        clearSearchBtn.addEventListener('click', function() {
+            searchInput.value = '';
+            currentFilters.search = '';
+            currentFilters.page = 1;
+            applyFilters();
+        });
+
+        // Filtros de Categoría (Radio buttons)
+        document.querySelectorAll('#category-filters input').forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.checked) {
+                    currentFilters.category = this.value;
+                    currentFilters.page = 1;
+                    applyFilters();
+                }
+            });
+        });
+        
+        // Ordenamiento
+        sortSelect.addEventListener('change', function() {
+            currentFilters.sort = this.value;
+            currentFilters.page = 1;
+            applyFilters();
+        });
+
+        // Llamada inicial para cargar la página
+        applyFilters();
+    });
+</script>
 </body>
 </html>
